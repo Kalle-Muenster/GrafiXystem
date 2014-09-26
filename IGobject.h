@@ -26,7 +26,8 @@ public:
 	IGobject(void);
 	virtual ~IGobject(void);
 	virtual void draw();
-	virtual void init(const char*, const char*);
+	virtual void init(const char* objFile,const char* textureFile);
+	virtual void init(const char* objFile,const char* textureFile,bool addToSceneGraph);
 	virtual void move(glm::vec3);
 	virtual void scale(glm::vec3);
 	virtual void rotate(glm::vec3);

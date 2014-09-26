@@ -1,3 +1,4 @@
+#include "projectMacros.h"
 #include "IGobject.h"
 #include "Utility.h"
 
@@ -7,11 +8,19 @@ IGobject::IGobject(void)
 }
 
 
+
 IGobject::~IGobject(void)
 {
 
 }
 
+void IGobject::init(const char* objFile,const char* textureFile,bool addToSceneGraph)
+{
+	this->init(objFile,textureFile);
+
+	if(addToSceneGraph)
+		SCENE->Add(this);
+}
 
 void IGobject::init(const char* objFile, const char* textureFile)
 {

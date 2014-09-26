@@ -5,8 +5,10 @@
 #include <iostream>
 #include "projectMacros.h"
 #include "Yeti.h"
+#include "Map.h"
 
 Yeti* yeti;
+Map* map;
 
 void init(void);
 void display(void);
@@ -66,12 +68,14 @@ void display()
 	Render();
 
 }
-
+float Yps=0.0;
+float inverter = -0.001;
 void Render()
 {
 	INPUT->PerFrameReset();
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	SCENE->camera->transform.position.y+=0.001;
+	Yps+=Yps>5?(inverter= -inverter):Yps<-0.5?(inverter= -inverter):inverter;
+	SCENE->camera->transform.position.y=Yps;
 	SCENE->DrawAll();
 
 	glutSwapBuffers();
@@ -129,6 +133,13 @@ void MouseWheelFunc(int wheel,int state,int x,int y)
 void GenerateObjects()
 {
 	yeti = new Yeti("wendy_Scene.obj","tex_wendy_2.jpg",true);
+
 	INPUT->attachMouseMove((IObserver*)yeti);
 	SCENE->camera->SetTarget(yeti);
+	
+
+	map = new Map("Landschaft.obj","Landschaft_Diffuse.jpg",true);
+	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
+
+	SCENE->camera->transform.position.z=1;
 }

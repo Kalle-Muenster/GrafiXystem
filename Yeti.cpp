@@ -8,9 +8,7 @@ Yeti::Yeti(void)
 
 Yeti::Yeti(const char* objFile,const char* textureFile,bool addToSceneGraph)
 {
-	this->init(objFile,textureFile);
-	if(addToSceneGraph)
-		SCENE->Add(this);
+	init(objFile,textureFile,addToSceneGraph);
 }
 
 Yeti::~Yeti(void)
