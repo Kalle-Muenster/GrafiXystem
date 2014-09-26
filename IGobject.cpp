@@ -29,9 +29,9 @@ void IGobject::init(const char* objFile, const char* textureFile)
 	IsVisible = true;
 }
 
-const Transform IGobject::getTransform()
+Transform* IGobject::getTransform()
 {
-	return this->transform;
+	return &this->transform;
 }
 
 void IGobject::move(glm::vec3 to)
@@ -53,6 +53,18 @@ void IGobject::draw()
 {
 	if(IsVisible)
 	{
-		//todo drawcode...
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+	
+	
+		//glRotatef(-90, 1, 0, 0);
+		glTranslatef(this->transform.position.x, this->transform.position.y, this->transform.position.z);
+
+		glDrawArrays(GL_TRIANGLES, 0, verts.size());
 	}
 }

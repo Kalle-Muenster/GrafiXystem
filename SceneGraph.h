@@ -8,9 +8,10 @@ class SceneGraph
 {
 private:
 	SceneGraph(void);
-	virtual ~SceneGraph(void);
+	
 	std::vector<IGobject*> drawables;
 public:
+	~SceneGraph(void);
 	static SceneGraph* GetInstance();
 	void Add(IGobject*);
 	void DrawAll();

@@ -1,34 +1,38 @@
 #include "SceneGraph.h"
 
-SceneGraph* instance;
+SceneGraph* scenegraph;
 
 SceneGraph::SceneGraph(void)
 {
 	camera = new Cam();
+	drawables = std::vector<IGobject*>();
 }
 
 SceneGraph::~SceneGraph(void)
 {
-	delete camera;
+//	delete camera;
 }
 
 SceneGraph* SceneGraph::GetInstance()
 {
-	if(!instance)
-		instance = new SceneGraph();
-
-	return instance;
+	if(!scenegraph)
+	{
+		scenegraph = new SceneGraph();
+	}
+	return scenegraph;
 }
 
 void SceneGraph::Add(IGobject* object)
 {
-	this->drawables.push_back(object);
+	scenegraph->drawables.push_back(object);
 }
 
 
 
 void SceneGraph::DrawAll()
 {
+	this->camera->Update();
+
 	for(auto it = drawables.begin();it!=drawables.end();it++)
 		(*it)->draw();
 }

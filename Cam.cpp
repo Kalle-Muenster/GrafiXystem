@@ -1,5 +1,5 @@
 #include "Cam.h"
-
+#include "projectMacros.h"
 
 Cam::Cam(void)
 {
@@ -23,9 +23,10 @@ Cam::~Cam(void)
 }
 
 void
-Cam::SetTarget(Transform &targetObjectsTransform)
+Cam::SetTarget(IGobject *targetObject)
 {
-	this->camTarget = &targetObjectsTransform.position;
+	_distanceToTarget = 0.1;
+	this->camTarget = &targetObject->getTransform()->position;
 	if (this->camTarget)
 		_isFollowingTarget = true;
 }
@@ -73,6 +74,11 @@ Cam::Update()
 {
 	if(_isFollowingTarget)
 	{
-		//todo  cam-positioning
+		transform.position.y += ((float)INPUT->Mouse.WheelV/100);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		gluLookAt(transform.position.x, transform.position.y, transform.position.z, camTarget->x,camTarget->y,camTarget->z, 0, 1, 0);
 	}
 }
+

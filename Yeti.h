@@ -4,14 +4,15 @@
 #include "InputManager.h"
 #include "IGobject.h"
 
-class Yeti : IGobject , IObserver
+class Yeti : public IGobject , IInteractive
 {
 public:
 	Yeti(void);
+	Yeti(const char* objFile,const char* textureFile,bool addToSceneGraph);
 	~Yeti(void);
-	void IObserver::specialKeyPressed(int key);
-	void IObserver::keyPress(char key);
-	void IObserver::mouseMotion(int x, int y);
+
+
+	void mouseMotion(int x, int y);
 
 };
 

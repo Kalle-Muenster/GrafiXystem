@@ -21,7 +21,7 @@ private:
 	std::vector<glm::vec3> norms;
 
 public:
-	virtual const Transform getTransform();
+	virtual Transform* getTransform();
 	bool IsVisible;
 	IGobject(void);
 	virtual ~IGobject(void);
