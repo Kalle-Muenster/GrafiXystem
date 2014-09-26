@@ -17,9 +17,7 @@ private:
 public:
 					Cam(void);
 	virtual			~Cam(void);
-	void specialKeyPressed(int key);
-	void keyPress(char key);
-	void mouseMotion(int x, int y);
+	
 	Transform		transform;
 	void			SetTarget(IGobject*);
 	const glm::vec3 GetTargetPosition(void);
@@ -27,6 +25,7 @@ public:
 	void			StopFollowing(void);
 	void			Update(void);
 
+	void WheelVRoll(WHEEL state);
 	
 };
 

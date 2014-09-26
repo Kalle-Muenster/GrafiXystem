@@ -75,26 +75,23 @@ void init()
 // -- Here everything what have to be loadet befor entering the MeinLoop could be done here.....
 void LoadingFunction()
 {
-	yeti = new Yeti("wendy_Scene.obj","tex_wendy_2.jpg",true);
+	yeti = new Yeti("wendy_Scene.obi","tex_wendy_2.jpg",true);
 
 	INPUT->attachMouseMove(yeti);
 	SCENE->camera->SetTarget(yeti);
-	
+	INPUT->attachMouseWheel(SCENE->camera);
 
-	map = new Map("Landschaft.obj","Landschaft_Diffuse.jpg",true);
+	map = new Map("Landschaft.obi","Landschaft_Diffuse.jpg",true);
 	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
 
 	SCENE->camera->transform.position.z=1;
 }
 
-float Yps=0.0;
-float inverter = -0.01;
+
 // the main Update-Cycle.....
 void UpdateFunction(void)
-{
-
-	Yps+=Yps>1?(inverter= -inverter):Yps<0?(inverter= -inverter):inverter;  
-	SCENE->camera->transform.position.y=Yps;
+{ 
+//	SCENE->camera->transform.position.y=Yps;
 }
 
 

@@ -18,6 +18,7 @@ InputManager::InputManager(void)
 	this->specialListener = std::vector<IObserver*>();
 	this->mouseMoveListener = std::vector<IObserver*>();
 	this->mouseClickListener = std::vector<IObserver*>();
+	this->mouseWheelListener = std::vector<IObserver*>();
 
 	Mouse.X=Mouse.Y=0;
 	Mouse.Position.x=Mouse.Position.y=0.0f;
@@ -40,7 +41,7 @@ void InputManager::attachMouseMove(IObserver* obs)
 void InputManager::attachKey(IObserver* obs) 
 {
 	if(obs->checkForObservability(OBSERVATE_KEYBOARD))
-	this->keyListener.push_back(obs);
+		this->keyListener.push_back(obs);
 }
 
 void InputManager::attachSpecial(IObserver* obs) 
@@ -51,11 +52,22 @@ void InputManager::attachSpecial(IObserver* obs)
 
 void InputManager::attachMouseClick(IObserver* obs)
 {
-		if(obs->checkForObservability(OBSERVATE_MOUSE)||obs->checkForObservability(OBSERVATE_CLICKS)||obs->checkForObservability(OBSERVATE_WHEELS))
+		if(obs->checkForObservability(OBSERVATE_MOUSE)||obs->checkForObservability(OBSERVATE_CLICKS))
 			this->mouseClickListener.push_back(obs);
 }
 
-void InputManager::notifySpecialKey(int key) 
+void InputManager::attachMouseWheel(IObserver* obs)
+{
+	if(obs->checkForObservability(OBSERVATE_WHEELS))
+		this->mouseWheelListener.push_back(obs);
+}
+
+
+
+
+
+void
+InputManager::notifySpecialKey(int key) 
 {
 	for(auto it = this->specialListener.begin(); it != this->specialListener.end(); ++it) 
 	{
@@ -63,7 +75,8 @@ void InputManager::notifySpecialKey(int key)
 	}
 }
 
-void InputManager::notifyKey(char key) 
+void
+InputManager::notifyKey(char key) 
 {
 	for(auto it = this->keyListener.begin(); it != this->keyListener.end(); ++it) 
 	{
@@ -71,12 +84,98 @@ void InputManager::notifyKey(char key)
 	}
 }
 
-void InputManager::notifyMouse(int x, int y) 
+void
+InputManager::notifyMouse(int x, int y) 
 {
 	_setMousePosition(x,y);
 	for(auto it = this->mouseMoveListener.begin(); it != this->mouseMoveListener.end(); ++it) 
 	{
 		((IInteractive*)(*it))->mouseMotion(x,y);
+	}
+}
+
+void
+InputManager::_notifyWheel(int wheel)
+{
+	for(auto it=mouseWheelListener.begin();it!=mouseWheelListener.end();it++)
+	{
+		if(!(*it)->checkForObservability(OBSERVATE_MOUSE|OBSERVATE_KEYBOARD))
+		{
+			if(wheel==0)
+				((IWheelee*)(*it))->WheelVRoll(Mouse.WheelV);
+			else
+				((IWheelee*)(*it))->WheelHRoll(Mouse.WheelH);
+		}
+		else
+			((IInteractive*)(*it))->mouseWheel(wheel,wheel==0?Mouse.WheelV:Mouse.WheelH);
+	}
+}
+
+void
+InputManager::_notifyQlicks(void)
+{
+	bool click = false;
+	if(Mouse.LEFT.CLICK)
+	{click=true;
+		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
+		{
+			if((*it)->checkForObservability(OBSERVATE_CLICKS))
+				((IQlickable*)(*it))->LeftClick(Mouse.Position);
+			else 
+				((IInteractive*)(*it))->mouseQlicks(0,click,Mouse.Position);
+		}
+	}
+	else if(Mouse.LEFT.RELEASE)
+	{
+		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
+		{
+			if((*it)->checkForObservability(OBSERVATE_CLICKS))
+				((IQlickable*)(*it))->LeftRelease(Mouse.Position);
+			else 
+				((IInteractive*)(*it))->mouseQlicks(0,click,Mouse.Position);
+		}
+	}
+
+	if(click=Mouse.RIGHT.CLICK)
+	{click=true;
+		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
+		{
+			if((*it)->checkForObservability(OBSERVATE_CLICKS))
+				((IQlickable*)(*it))->RightClick(Mouse.Position);
+			else
+				((IInteractive*)(*it))->mouseQlicks(1,click,Mouse.Position);
+		}
+	}
+	else if(Mouse.RIGHT.RELEASE)
+	{
+		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
+		{
+			if((*it)->checkForObservability(OBSERVATE_CLICKS))
+				((IQlickable*)(*it))->LeftRelease(Mouse.Position);
+			else 
+				((IInteractive*)(*it))->mouseQlicks(0,false,Mouse.Position);
+		}
+	}
+
+	if(click=Mouse.MIDDLE.CLICK)
+	{click=true;
+		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
+		{
+			if((*it)->checkForObservability(OBSERVATE_CLICKS))
+				((IQlickable*)(*it))->MiddleClick(Mouse.Position);
+			else
+				((IInteractive*)(*it))->mouseQlicks(2,true,Mouse.Position);
+		}
+	}
+	else if(Mouse.MIDDLE.RELEASE)
+	{
+		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
+		{
+			if((*it)->checkForObservability(OBSERVATE_CLICKS))
+				((IQlickable*)(*it))->MiddleRelease(Mouse.Position);
+			else 
+				((IInteractive*)(*it))->mouseQlicks(2,false,Mouse.Position);
+		}
 	}
 }
 
@@ -107,23 +206,26 @@ InputManager::UbdateMouseButtons(int button,int state,int x,int y)
 void
 InputManager::UpdateMouseWheel(int wheel,int state,int x,int y)
 {
-	//	Mouse.WheelV = Mouse.WheelH = 0;
+	Mouse.WheelV = Mouse.WheelH = WHEEL::NONE;
 
 		if(wheel == 0)  // the first mouswheel -> veretical scroll
 			Mouse.WheelV = (WHEEL)state;
-		else 
-		if(wheel == 1)   // the second mousewheel (if your Mouse has one...)
+		else if(wheel == 1)   // the second mousewheel (if your Mouse has one...)
 			Mouse.WheelH = (WHEEL)state;
+
+	// calls the invoktionList
+	_notifyWheel(wheel);
+
 #ifdef MOUSE_TEST_OUTPUT
-	if(instance->Mouse.WheelV== WHEEL::UP)
+	if(instance->Mouse.WheelV == WHEEL::UP)
 		std::cout<<"WheelUP\n";
-	if(instance->Mouse.WheelV== WHEEL::DOWN)
+	if(instance->Mouse.WheelV == WHEEL::DOWN)
 		std::cout<<"WheelDOWN\n";
 #endif
 }
 
-
-void InputManager::_setMousePosition(int x,int y)
+void
+InputManager::_setMousePosition(int x,int y)
 {
 	Mouse.Movement.x = x-Mouse.Position.x;
 	Mouse.Movement.y = y-Mouse.Position.y;
@@ -143,34 +245,9 @@ InputManager::_setMouseButtons()
 	Mouse.MIDDLE.RELEASE = Mouse.MIDDLE.HOLD? !(Mouse.MIDDLE.HOLD = MIDDLEnewState):false;
 	Mouse.MIDDLE.CLICK = Mouse.MIDDLE.CLICK? !(Mouse.MIDDLE.HOLD = MIDDLEnewState): !Mouse.MIDDLE.HOLD? MIDDLEnewState:false;
 
-	Mouse.WheelV = Mouse.WheelH = 0;
+	Mouse.WheelV = Mouse.WheelH = WHEEL::NONE;
 
-	if(Mouse.LEFT.CLICK)
-	{
-		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
-		{
-			if((*it)->checkForObservability(OBSERVATE_CLICKS))
-				((IQlickable*)(*it))->LeftClick(Mouse.Position);
-		}
-	}
-
-	if(Mouse.RIGHT.CLICK)
-	{
-		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
-		{
-			if((*it)->checkForObservability(OBSERVATE_CLICKS))
-				((IQlickable*)(*it))->RightClick(Mouse.Position);
-		}
-	}
-
-	if(Mouse.MIDDLE.CLICK)
-	{
-		for(auto it = this->mouseClickListener.begin(); it != this->mouseClickListener.end(); ++it) 
-		{
-			if((*it)->checkForObservability(OBSERVATE_CLICKS))
-				((IQlickable*)(*it))->MiddleClick(Mouse.Position);
-		}
-	}
+	_notifyQlicks();
 }
 
 void
@@ -188,23 +265,39 @@ InputManager::PerFrameReset(void)
 #endif
 }
 
+
+
 bool
 IObserver::checkForObservability(int flag)
 {
-	return ((observedEvents/flag)<=1);
+	return ((observedEvents()/flag)>=1);
 }
 
 IInteractive::IInteractive()
 {
-	observedEvents |= OBSERVATE_MOUSE|OBSERVATE_KEYBOARD;
+	
+}
+int
+IInteractive::observedEvents()
+{
+	return OBSERVATE_MOUSE|OBSERVATE_KEYBOARD;
 }
 
 IQlickable::IQlickable()
 {
-	observedEvents |= OBSERVATE_CLICKS|OBSERVATE_MOUSE;
-}
 
+}
+int
+IQlickable::observedEvents()
+{
+	return OBSERVATE_CLICKS|OBSERVATE_MOUSE;
+}
 IWheelee::IWheelee()
 {
-	observedEvents |= OBSERVATE_MOUSE|OBSERVATE_WHEELS;
+
+}
+int 
+IWheelee::observedEvents()
+{
+	return OBSERVATE_MOUSE|OBSERVATE_WHEELS;
 }

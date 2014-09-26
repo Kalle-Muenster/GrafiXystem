@@ -62,6 +62,8 @@ void IGobject::draw()
 {
 	if(IsVisible)
 	{
+		glPushMatrix();
+		{
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -75,5 +77,7 @@ void IGobject::draw()
 		glTranslatef(this->transform.position.x, this->transform.position.y, this->transform.position.z);
 
 		glDrawArrays(GL_TRIANGLES, 0, verts.size());
+		}
+		glPopMatrix();
 	}
 }

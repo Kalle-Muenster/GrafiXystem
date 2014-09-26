@@ -12,7 +12,7 @@ public:
 	~Yeti(void);
 
 
-	void mouseMotion(int x, int y);
+	void keyPress(char);
 
 };
 

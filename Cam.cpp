@@ -13,6 +13,9 @@ Cam::Cam(void)
 	this->transform.scale.x=1;
 	this->transform.scale.y=1;
 	this->transform.scale.z=1;
+
+	
+	
 }
 
 
@@ -51,22 +54,28 @@ Cam::GetTargetPosition()
 	return *this->camTarget;
 }
 
+//void 
+//Cam::keyPress(char key)
+//{
+//
+//}
+//
+//void
+//Cam::mouseMotion(int x,int y)
+//{
+//
+//}
+//
+//void
+//Cam::specialKeyPressed(int spezial)
+//{
+//
+//}
 void 
-Cam::keyPress(char key)
+Cam::WheelVRoll(WHEEL state)
 {
-
-}
-
-void
-Cam::mouseMotion(int x,int y)
-{
-
-}
-
-void
-Cam::specialKeyPressed(int spezial)
-{
-
+	transform.position.y+=(float)state/10;
+	std::cout<<"CamOnWheelV Invoked!";
 }
 
 void
@@ -74,7 +83,6 @@ Cam::Update()
 {
 	if(_isFollowingTarget)
 	{
-		transform.position.y += ((float)INPUT->Mouse.WheelV/100);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
