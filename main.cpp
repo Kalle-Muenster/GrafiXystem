@@ -8,6 +8,7 @@
 #include "Map.h"
 
 Yeti* yeti;
+Yeti* serengetiYeti;
 Map* map;
 
 void init(void);
@@ -38,6 +39,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(reshape);
 	glutIdleFunc(idle);
 
+	glutMotionFunc(MouseMoveFunc);
 	glutPassiveMotionFunc(MouseMoveFunc);
 	glutMouseFunc(MouseClicks);
 	glutMouseWheelFunc(MouseWheelFunc);
@@ -75,11 +77,17 @@ void init()
 // -- Here everything what have to be loadet befor entering the MeinLoop could be done here.....
 void LoadingFunction()
 {
-	yeti = new Yeti("wendy_Scene.obi","tex_wendy_2.jpg",true);
-
-	INPUT->attachMouseMove(yeti);
-	SCENE->camera->SetTarget(yeti);
 	INPUT->attachMouseWheel(SCENE->camera);
+
+	yeti = new Yeti("wendy_Scene.obi","tex_wendy_2.jpg",true);
+	INPUT->attachKey(yeti);
+	INPUT->attachMouseMove(yeti);
+	
+	
+	serengetiYeti = new Yeti("wendy_Scene.obi","tex_wendy.jpg",true);
+	SCENE->camera->SetTarget(serengetiYeti);
+	//INPUT->attachKey(serengetiYeti);
+	INPUT->attachMouseMove(serengetiYeti);
 
 	map = new Map("Landschaft.obi","Landschaft_Diffuse.jpg",true);
 	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
@@ -87,11 +95,21 @@ void LoadingFunction()
 	SCENE->camera->transform.position.z=1;
 }
 
-
+int yetiNumber=0;
 // the main Update-Cycle.....
 void UpdateFunction(void)
 { 
-//	SCENE->camera->transform.position.y=Yps;
+	if(INPUT->Mouse.MIDDLE.CLICK)
+		if(yetiNumber==0)
+		{
+			SCENE->camera->SetTarget(yeti);
+			yetiNumber=1;
+		}
+		else
+		{
+			SCENE->camera->SetTarget(serengetiYeti);
+			yetiNumber=0;
+		}
 }
 
 
@@ -133,11 +151,11 @@ void display()
 }
 void idle()
 {
-//	glutPostRedisplay();
+	glutPostRedisplay();
 	
-	UpdateFunction();
-	Render();
-	INPUT->PerFrameReset();
+	//UpdateFunction();
+	//Render();
+	//INPUT->PerFrameReset();
 }
 void keyboardInput(unsigned char key, int x, int y)
 {

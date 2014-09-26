@@ -13,7 +13,7 @@ public:
 
 
 	void keyPress(char);
-
+	void mouseMotion(int,int);
 };
 
 #endif

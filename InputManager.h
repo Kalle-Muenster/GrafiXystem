@@ -3,7 +3,7 @@
 #define __INPUTMANAGER_H__
 
 //Undefine to switch off Console-output of mouse data test
-#define MOUSE_TEST_OUTPUT
+#define MOUSE_TEST_OUTPUT (1)
 
 //Observer Flags
 #define OBSERVATE_CLICKS       (0x1)

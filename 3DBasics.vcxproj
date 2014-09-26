@@ -40,7 +40,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\boost;$(IncludePath)</IncludePath>
+    <IncludePath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\boost;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm\gtc;$(IncludePath)</IncludePath>
     <LibraryPath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\lib;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\lib\Release\Win32;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\lib;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
