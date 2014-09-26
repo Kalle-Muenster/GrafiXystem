@@ -22,6 +22,8 @@ InputManager::InputManager(void)
 	Mouse.X=Mouse.Y=0;
 	Mouse.Position.x=Mouse.Position.y=0.0f;
 	LEFTnewState=MIDDLEnewState=RIGHTnewState=false;
+	Mouse.LEFT.CLICK=Mouse.RIGHT.CLICK=Mouse.MIDDLE.CLICK=false;
+	Mouse.LEFT.HOLD=Mouse.RIGHT.HOLD=Mouse.MIDDLE.HOLD=false;
 }
 
 InputManager::~InputManager(void)
@@ -84,13 +86,13 @@ InputManager::UbdateMouseButtons(int button,int state,int x,int y)
 		switch (button)
 		{
 		case GLUT_LEFT_BUTTON:
-			LEFTnewState = state;
+			LEFTnewState = !state;
 			break;
 		case GLUT_MIDDLE_BUTTON:
-			MIDDLEnewState =  state;
+			MIDDLEnewState =  !state;
 			break;
 		case GLUT_RIGHT_BUTTON:
-			RIGHTnewState = state;
+			RIGHTnewState = !state;
 			break;
 		}
 		_setMousePosition(x,y);
@@ -105,15 +107,19 @@ InputManager::UbdateMouseButtons(int button,int state,int x,int y)
 void
 InputManager::UpdateMouseWheel(int wheel,int state,int x,int y)
 {
-		Mouse.WheelV = Mouse.WheelH = 0;
+	//	Mouse.WheelV = Mouse.WheelH = 0;
 
 		if(wheel == 0)  // the first mouswheel -> veretical scroll
 			Mouse.WheelV = (WHEEL)state;
 		else 
 		if(wheel == 1)   // the second mousewheel (if your Mouse has one...)
 			Mouse.WheelH = (WHEEL)state;
-		
-
+#ifdef MOUSE_TEST_OUTPUT
+	if(instance->Mouse.WheelV== WHEEL::UP)
+		std::cout<<"WheelUP\n";
+	if(instance->Mouse.WheelV== WHEEL::DOWN)
+		std::cout<<"WheelDOWN\n";
+#endif
 }
 
 
@@ -171,6 +177,15 @@ void
 InputManager::PerFrameReset(void)
 {
 	_setMouseButtons();
+
+#ifdef MOUSE_TEST_OUTPUT
+		 if(instance->Mouse.LEFT.CLICK)
+		std::cout<<"CLICK\n";
+	else if(instance->Mouse.LEFT.RELEASE)
+		std::cout<<"\n...RELEASE\n\n";
+	else if(instance->Mouse.LEFT.HOLD)
+		std::cout<<"HOLD..";
+#endif
 }
 
 bool

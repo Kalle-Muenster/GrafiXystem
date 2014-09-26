@@ -4,7 +4,7 @@
 #include "InputManager.h"
 #include "IGobject.h"
 
-class Yeti : public IGobject , IInteractive
+class Yeti : public IGobject ,public IInteractive
 {
 public:
 	Yeti(void);

@@ -1,6 +1,8 @@
 #ifndef __INPUTMANAGER_H__
 #define __INPUTMANAGER_H__
 
+#define MOUSE_TEST_OUTPUT
+
 #define OBSERVATE_CLICKS       (0x1)
 #define OBSERVATE_WHEELS       (0x2)
 #define OBSERVATE_KEYBOARD     (0x4)
@@ -19,7 +21,7 @@ public:
 	bool checkForObservability(int flag);
 };
 
-class IInteractive : IObserver
+class IInteractive : public IObserver
 {
 
 public:
@@ -31,7 +33,7 @@ public:
 	virtual void mouseWheel(int wheel,WHEEL state){};
 };
 
-class IQlickable : IObserver
+class IQlickable : public IObserver
 {
 public:
 	IQlickable(void);
@@ -40,7 +42,7 @@ public:
 	virtual void MiddleClick(glm::vec2 position){};
 };
 
-class IWheelee : IObserver
+class IWheelee : public IObserver
 {
 public:
 	IWheelee(void);

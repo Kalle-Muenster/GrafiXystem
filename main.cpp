@@ -20,10 +20,16 @@ void keyboardInput(unsigned char, int, int);
 void processSpecialKeys(int, int, int);
 void MouseMoveFunc(int, int);
 void MouseWheelFunc(int,int,int,int);
-void GenerateObjects(void);
+void LoadingFunction(void);
+void UpdateFunction(void);
+void WriteText(char* string,int x,int y,int z);
 
+
+// - The Assambley's entrypoint
 int main(int argc, char** argv)
 {
+
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
@@ -41,6 +47,9 @@ int main(int argc, char** argv)
 	glewInit();
 	init();
 	glutMainLoop();
+
+	delete yeti;
+	delete map;
 
 	return 0;
 }  
@@ -60,23 +69,42 @@ void init()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	GenerateObjects();
+	LoadingFunction();
 }
 
-void display()
+// -- Here everything what have to be loadet befor entering the MeinLoop could be done here.....
+void LoadingFunction()
 {
-	Render();
+	yeti = new Yeti("wendy_Scene.obj","tex_wendy_2.jpg",true);
 
+	INPUT->attachMouseMove(yeti);
+	SCENE->camera->SetTarget(yeti);
+	
+
+	map = new Map("Landschaft.obj","Landschaft_Diffuse.jpg",true);
+	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
+
+	SCENE->camera->transform.position.z=1;
 }
+
 float Yps=0.0;
-float inverter = -0.001;
+float inverter = -0.01;
+// the main Update-Cycle.....
+void UpdateFunction(void)
+{
+
+	Yps+=Yps>1?(inverter= -inverter):Yps<0?(inverter= -inverter):inverter;  
+	SCENE->camera->transform.position.y=Yps;
+}
+
+
+// The Main Render-Cycle.....
 void Render()
 {
-	INPUT->PerFrameReset();
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	Yps+=Yps>5?(inverter= -inverter):Yps<-0.5?(inverter= -inverter):inverter;
-	SCENE->camera->transform.position.y=Yps;
+
 	SCENE->DrawAll();
+
 
 	glutSwapBuffers();
 }
@@ -98,12 +126,22 @@ void reshape(GLsizei width, GLsizei height)
 	gluPerspective(45, aspect, 0.1f, 100.0f);
 }
 
+
+void display()
+{
+	
+	UpdateFunction();
+	Render();
+	INPUT->PerFrameReset();
+}
 void idle()
 {
-	//glutPostRedisplay();
+//	glutPostRedisplay();
+	
+	UpdateFunction();
 	Render();
+	INPUT->PerFrameReset();
 }
-
 void keyboardInput(unsigned char key, int x, int y)
 {
 	INPUT->notifyKey(key);
@@ -129,17 +167,3 @@ void MouseWheelFunc(int wheel,int state,int x,int y)
 	INPUT->UpdateMouseWheel(wheel,state,x,y);
 }
 
-
-void GenerateObjects()
-{
-	yeti = new Yeti("wendy_Scene.obj","tex_wendy_2.jpg",true);
-
-	INPUT->attachMouseMove((IObserver*)yeti);
-	SCENE->camera->SetTarget(yeti);
-	
-
-	map = new Map("Landschaft.obj","Landschaft_Diffuse.jpg",true);
-	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
-
-	SCENE->camera->transform.position.z=1;
-}
