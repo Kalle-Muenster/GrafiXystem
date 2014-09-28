@@ -6,10 +6,12 @@
 #include "projectMacros.h"
 #include "Yeti.h"
 #include "Map.h"
+#include "IrrAudio.h"
 
 Yeti* yeti;
 Yeti* serengetiYeti;
 Map* map;
+irrAudio audio;
 
 void init(void);
 void display(void);
@@ -46,13 +48,17 @@ int main(int argc, char** argv)
 	glutSpecialFunc(processSpecialKeys);
 	glutKeyboardFunc(keyboardInput);
 	
+
 	glewInit();
 	init();
 	glutMainLoop();
-
+	
+	
+//	audio->SwitchOff();
 	delete yeti;
 	delete map;
-
+	
+//	delete audio;
 	return 0;
 }  
 
@@ -93,23 +99,37 @@ void LoadingFunction()
 	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
 
 	SCENE->camera->transform.position.z=1;
+
+	audio = irrAudio();
+	audio.OpenAudioFile("testtrack.wav");
+	//audio->LoadAudioFile("testtrack.wav");
+	//
+	//audio->SetVolume(0.8f);
+
 }
 
 int yetiNumber=0;
 // the main Update-Cycle.....
 void UpdateFunction(void)
 { 
-	if(INPUT->Mouse.MIDDLE.CLICK)
+	if(INPUT->Mouse.LEFT.CLICK)
+	{
+		
 		if(yetiNumber==0)
 		{
 			SCENE->camera->SetTarget(yeti);
 			yetiNumber=1;
+			audio.Controls->setVolume(0.2f);
+			printf("Audio: Volume ??");
 		}
 		else
 		{
 			SCENE->camera->SetTarget(serengetiYeti);
 			yetiNumber=0;
+			audio.Controls->setVolume(0.9);
+			audio.Controls->setIsPaused(false);
 		}
+	}
 }
 
 
@@ -120,7 +140,7 @@ void Render()
 
 	SCENE->DrawAll();
 
-
+	
 	glutSwapBuffers();
 }
 
@@ -151,14 +171,19 @@ void display()
 }
 void idle()
 {
-	glutPostRedisplay();
+//	glutPostRedisplay();
 	
-	//UpdateFunction();
-	//Render();
-	//INPUT->PerFrameReset();
+	UpdateFunction();
+	Render();
+	INPUT->PerFrameReset();
 }
 void keyboardInput(unsigned char key, int x, int y)
 {
+	if(key=='q')
+	{
+		glutExit();
+	//	audio->SwitchOff();
+	}
 	INPUT->notifyKey(key);
 }
 
@@ -174,7 +199,7 @@ void MouseMoveFunc(int x, int y)
 
 void MouseClicks(int button,int state,int x,int y)
 {
-	INPUT->UbdateMouseButtons(button,state,x,y);
+	INPUT->UpdateMouseButtons(button,state,x,y);
 }
 
 void MouseWheelFunc(int wheel,int state,int x,int y)

@@ -75,7 +75,6 @@ void
 Cam::WheelVRoll(WHEEL state)
 {
 	transform.position.y+=(float)state/10;
-	std::cout<<"CamOnWheelV Invoked!";
 }
 
 void

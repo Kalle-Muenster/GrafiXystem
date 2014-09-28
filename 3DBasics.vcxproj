@@ -21,8 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
-    <CLRSupport>
-    </CLRSupport>
+    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -42,18 +41,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\boost;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm\gtc;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\lib;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\lib\Release\Win32;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\lib;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\boost;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm\gtc;C:\STUFF\GAMEDESIGN\libsNeu\irrKlang-1.4.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\lib;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\lib\Release\Win32;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\lib;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\lib;C:\STUFF\GAMEDESIGN\libsNeu\irrKlang-1.4.0\lib\Win32-visualStudio;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
+      <SDLCheck>
+      </SDLCheck>
+      <CompileAsManaged>false</CompileAsManaged>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glloadD.lib;glimgD.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glloadD.lib;glimgD.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;irrklang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,6 +77,7 @@
     <ClCompile Include="Cam.cpp" />
     <ClCompile Include="IGobject.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="IrrAudio.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
@@ -82,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="Cam.h" />
     <ClInclude Include="IGobject.h" />
+    <ClInclude Include="IrrAudio.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="projectGrafics.h" />
     <ClInclude Include="InputManager.h" />
@@ -89,6 +95,13 @@
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Yeti.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="sinus441.wav" />
+    <Media Include="testtrack.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

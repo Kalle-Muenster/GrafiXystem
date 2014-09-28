@@ -93,7 +93,7 @@ void IGobject::draw()
 
 		
 
-		printf("forward: %f  \n\n",this->getTransform()->forward->z);
+	//	printf("forward: %f  \n\n",this->getTransform()->forward->z);
 		//Scaleate...
 	//	glScalef(this->transform.scale.x,this->transform.scale.y,this->transform.scale.z);
 	

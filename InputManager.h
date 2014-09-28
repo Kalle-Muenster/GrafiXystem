@@ -126,7 +126,7 @@ public:
 	virtual void notifySpecialKey(int key);
 	virtual void notifyKey(char key);
 	virtual void notifyMouse(int x, int y);
-	void UbdateMouseButtons(int,int,int,int);
+	void UpdateMouseButtons(int,int,int,int);
 	void UpdateMouseWheel(int,int,int,int);
 
 

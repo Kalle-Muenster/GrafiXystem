@@ -180,7 +180,7 @@ InputManager::_notifyQlicks(void)
 }
 
 void
-InputManager::UbdateMouseButtons(int button,int state,int x,int y)
+InputManager::UpdateMouseButtons(int button,int state,int x,int y)
 {
 		switch (button)
 		{
