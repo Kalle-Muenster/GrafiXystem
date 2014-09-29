@@ -3,15 +3,18 @@
 
 #include <vector>
 #include <iostream>
+#include "IrrAudio.h"
 #include "projectMacros.h"
 #include "Yeti.h"
 #include "Map.h"
-#include "IrrAudio.h"
+
+#define AUDIO irrAudio::GetInstance()
 
 Yeti* yeti;
 Yeti* serengetiYeti;
 Map* map;
-irrAudio audio;
+
+
 
 void init(void);
 void display(void);
@@ -100,8 +103,8 @@ void LoadingFunction()
 
 	SCENE->camera->transform.position.z=1;
 
-	audio = irrAudio();
-	audio.OpenAudioFile("testtrack.wav");
+	
+//	audio.OpenAudioFile("testtrack.wav");
 	//audio->LoadAudioFile("testtrack.wav");
 	//
 	//audio->SetVolume(0.8f);
@@ -119,17 +122,17 @@ void UpdateFunction(void)
 		{
 			SCENE->camera->SetTarget(yeti);
 			yetiNumber=1;
-			audio.Controls->setVolume(0.2f);
-			printf("Audio: Volume ??");
+		//	AUDIO.Loade("hallo");
 		}
 		else
 		{
 			SCENE->camera->SetTarget(serengetiYeti);
 			yetiNumber=0;
-			audio.Controls->setVolume(0.9);
-			audio.Controls->setIsPaused(false);
 		}
 	}
+
+	//if(INPUT->Mouse.RIGHT.CLICK)
+	//	audioControls->setIsPaused(false);
 }
 
 

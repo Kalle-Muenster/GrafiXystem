@@ -4,6 +4,8 @@
 #include "InputManager.h"
 #include "SceneGraph.h"
 
+
+
 #define INPUT InputManager::getInstance()
 #define SCENE SceneGraph::GetInstance()
 #define SCREENWIDTH (800)
@@ -11,7 +13,8 @@
 
 #include <irrKlang.h>
 #pragma comment(lib,"irrklang.lib")
+#define IK_AUDIO_BUFFER_LENGTH (4096)
+#include <windows.h>
 
-using namespace irrklang;
 
 #endif
