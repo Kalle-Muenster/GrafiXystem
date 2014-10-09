@@ -37,8 +37,8 @@ void WriteText(char* string,int x,int y,int z);
 // - The Assambley's entrypoint
 int main(int argc, char** argv)
 {
-	AUDIO->LoadeAudio("testtrack.wav");
-	std::cout<<"AudioTrack loadedt...";
+	//AUDIO->LoadeAudio("testtrack.wav");
+	//std::cout<<"AudioTrack loadedt...";
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
@@ -116,8 +116,8 @@ void LoadingFunction()
 	
 	
 
-	AUDIO->Play();
-	std::cout<<"\nAudio:  PLAYING\n";
+	//AUDIO->Play();
+	//std::cout<<"\nAudio:  PLAYING\n";
 
 }
 
@@ -147,15 +147,16 @@ void UpdateFunction(void)
 		if(yetiNumber==0)
 		{
 			SCENE->camera->SetFirstPerson((IGobject*)yeti);
-
+			yetiNumber=1;
 		}
 		else
 		{
 			SCENE->camera->SetFirstPerson((IGobject*)serengetiYeti);
+			yetiNumber=0;
 		}
 
 
-		SCENE->camera->SetFirstPerson((IGobject*)yeti);
+		
 	}
 	UPDATE->DoAllTheUpdates();
 //	if(INPUT->Mouse.RIGHT.CLICK)

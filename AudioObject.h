@@ -1,17 +1,10 @@
 #ifndef _AUDIO_OBJECT_H_
 #define _AUDIO_OBJECT_H_
 
-//#include "stdafx.h"
-//
+
 #include "Utility.h"
 
-//class Transform
-//{
-//public:
-//    BASS_3DVECTOR position;
-//    BASS_3DVECTOR rotation;
-//    BASS_3DVECTOR scale;
-//};
+
 
 
 
