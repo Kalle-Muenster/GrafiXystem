@@ -1,13 +1,17 @@
 #ifndef __UTILITY_H__
 #define __UTILITY_H__
 
-#include "projectGrafics.h"
 
+#include "projectGrafics.h"
+#include <bass.h>
+#include <bass_fx.h>
 #include <vector>
 #include <iostream>
 
+
 struct Transform 
 {
+	
 	glm::vec3 position;
 	glm::vec3 scale;
 	glm::vec3 rotation;

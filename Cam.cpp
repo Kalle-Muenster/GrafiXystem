@@ -21,7 +21,7 @@ Cam::Cam(void)
 
 Cam::~Cam(void)
 {
-	
+	_FollowFirstPerson=false;
 	delete camTarget;
 }
 
@@ -32,19 +32,69 @@ Cam::SetTarget(IGobject *targetObject)
 	this->camTarget = &targetObject->getTransform()->position;
 	if (this->camTarget)
 		_isFollowingTarget = true;
+	_target = targetObject;
+	_target->IsVisible=true;
+	_FollowFirstPerson=false;
+}
+
+IGobject* 
+Cam::GetTarget(void)
+{
+	if(_isFollowingTarget||_FollowFirstPerson)
+	return _target;
+	else
+	return NULL;
 }
 
 void
 Cam::followTarget()
 {
 	if (this->camTarget)
+	{
 		_isFollowingTarget = true;
+		_FollowFirstPerson = false;
+		_target->IsVisible=true;
+	}
 }
 
 void
 Cam::StopFollowing()
 {
-	_isFollowingTarget = false;
+	_FollowFirstPerson = _isFollowingTarget = false;
+	this->GetTarget()->IsVisible=true;
+	_target->IsVisible=true;
+}
+
+void
+Cam::SetFirstPerson(IGobject* personObj)
+{
+	_target->IsVisible=true;
+	_target = personObj;
+	_target->IsVisible=false;
+	this->camTarget = &personObj->transform.position;
+	_isFollowingTarget=false;
+	_FollowFirstPerson=true;
+}
+
+ConID*
+Cam::SetFirstPerson(IConnectable* onPerson)
+{
+	this->targetConID = this->ConnectConnectableInstance(onPerson);
+	this->camTarget = &GetConnected<IConnectable>(*targetConID)->Connection()->transform.position;
+	_target->IsVisible=true;
+	_target = GetConnected<IConnectable>(*targetConID)->Connection();
+	_isFollowingTarget=false;
+	_FollowFirstPerson=true;
+	return targetConID;
+	_target->IsVisible=false;
+}
+
+void
+Cam::SetTargetasFirstPerson(void)
+{
+	_target->IsVisible=false;
+	_FollowFirstPerson=true;
+	_isFollowingTarget=false;
 }
 
 const
@@ -86,6 +136,16 @@ Cam::Update()
 		glLoadIdentity();
 
 		gluLookAt(transform.position.x, transform.position.y, transform.position.z, camTarget->x,camTarget->y,camTarget->z, 0, 1, 0);
+	}
+	if(_FollowFirstPerson)
+	{
+		
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		this->transform = _target->transform;
+
+		gluLookAt(transform.position.x, transform.position.y+1, transform.position.z, transform.rotation.x,transform.rotation.y,transform.rotation.z, 0, 1, 0);
 	}
 }
 

@@ -26,7 +26,7 @@ public:
 //IObserver Interfaces
 class IObserver
 {
-protected:
+public:
 	virtual int observedEvents()=0;
 	
 public:

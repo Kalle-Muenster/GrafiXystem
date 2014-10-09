@@ -41,8 +41,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\include;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\boost;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glm\glm\gtc;C:\STUFF\GAMEDESIGN\libsNeu\irrKlang-1.4.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\STUFF\GAMEDESIGN\libsNeu\Libs\freeglut\lib;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glew-1.10.0\lib\Release\Win32;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glload\lib;C:\STUFF\GAMEDESIGN\libsNeu\Libs\glsdk_0_5_2\glimg\lib;C:\STUFF\GAMEDESIGN\libsNeu\irrKlang-1.4.0\lib\Win32-visualStudio;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\STUFF\GAMEDESIGN\libsGL\freeglut\include;C:\STUFF\GAMEDESIGN\libsGL\Libs\glew-1.10.0\include;C:\STUFF\GAMEDESIGN\libsGL\Libs\glm\glm;C:\STUFF\GAMEDESIGN\libsGL\Libs\glsdk_0_5_2\glload\include;C:\STUFF\GAMEDESIGN\libsGL\Libs\glsdk_0_5_2\glimg\include;C:\STUFF\GAMEDESIGN\libsGL\Libs\glsdk_0_5_2\boost;C:\STUFF\GAMEDESIGN\libsGL\Libs\glm\glm\gtc;C:\STUFF\GAMEDESIGN\libsAU\bass24\c;C:\STUFF\GAMEDESIGN\libsAU\bass24\bass_fx\C;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\STUFF\GAMEDESIGN\libsGL\freeglut\lib;C:\STUFF\GAMEDESIGN\libsGL\Libs\glew-1.10.0\lib\Release\Win32;C:\STUFF\GAMEDESIGN\libsGL\Libs\glsdk_0_5_2\glload\lib;C:\STUFF\GAMEDESIGN\libsGL\Libs\glsdk_0_5_2\glimg\lib;C:\STUFF\GAMEDESIGN\libsAU\bass24\c;C:\STUFF\GAMEDESIGN\libsAU\bass24\bass_fx\C;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
   </PropertyGroup>
@@ -57,7 +57,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glloadD.lib;glimgD.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;irrklang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glloadD.lib;glimgD.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;bass.lib;bass_fx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,28 +74,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AudioObject.cpp" />
+    <ClCompile Include="BassAudio.cpp" />
     <ClCompile Include="Cam.cpp" />
+    <ClCompile Include="Connectable.cpp" />
     <ClCompile Include="IGobject.cpp" />
     <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="IrrAudio.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
+    <ClCompile Include="Observer.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
+    <ClCompile Include="TestConectables.cpp" />
+    <ClCompile Include="TestYeti.cpp" />
+    <ClCompile Include="UpdateManager.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Yeti.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioObject.h" />
+    <ClInclude Include="BassAudio.h" />
     <ClInclude Include="Cam.h" />
+    <ClInclude Include="Connectable.h" />
     <ClInclude Include="IGobject.h" />
     <ClInclude Include="IrrAudio.h" />
-    <ClInclude Include="IrrReader.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="Observer.h" />
     <ClInclude Include="projectGrafics.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="projectMacros.h" />
     <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="TestConectables.h" />
+    <ClInclude Include="TestYeti.h" />
+    <ClInclude Include="UpdateManager.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Yeti.h" />
   </ItemGroup>

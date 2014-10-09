@@ -153,7 +153,7 @@ InputManager::_notifyQlicks(void)
 			if((*it)->checkForObservability(OBSERVATE_CLICKS))
 				((IQlickable*)(*it))->LeftRelease(Mouse.Position);
 			else 
-				((IInteractive*)(*it))->mouseQlicks(0,false,Mouse.Position);
+				((IInteractive*)(*it))->mouseQlicks(1,false,Mouse.Position);
 		}
 	}
 
@@ -164,7 +164,7 @@ InputManager::_notifyQlicks(void)
 			if((*it)->checkForObservability(OBSERVATE_CLICKS))
 				((IQlickable*)(*it))->MiddleClick(Mouse.Position);
 			else
-				((IInteractive*)(*it))->mouseQlicks(2,true,Mouse.Position);
+				((IInteractive*)(*it))->mouseQlicks(2,click,Mouse.Position);
 		}
 	}
 	else if(Mouse.MIDDLE.RELEASE)
@@ -262,6 +262,18 @@ InputManager::PerFrameReset(void)
 		std::cout<<"\n...RELEASE\n\n";
 	else if(instance->Mouse.LEFT.HOLD)
 		std::cout<<"HOLD..";
+	if(instance->Mouse.RIGHT.CLICK)
+		std::cout<<"RIGHT-CLICK\n";
+	else if(instance->Mouse.RIGHT.RELEASE)
+		std::cout<<"\n...RIGHT-RELEASE\n\n";
+	else if(instance->Mouse.RIGHT.HOLD)
+		std::cout<<"RIGHT-HOLD..";
+	if(instance->Mouse.MIDDLE.CLICK)
+		std::cout<<"MIDDLE-CLICK\n";
+	else if(instance->Mouse.MIDDLE.RELEASE)
+		std::cout<<"\n...MIDDLE-RELEASE\n\n";
+	else if(instance->Mouse.MIDDLE.HOLD)
+		std::cout<<"MIDDLE-HOLD..";
 #endif
 }
 
@@ -270,7 +282,28 @@ InputManager::PerFrameReset(void)
 bool
 IObserver::checkForObservability(int flag)
 {
-	return ((observedEvents()/flag)>=1);
+	int obst=observedEvents();
+	bool mouse = (obst/OBSERVATE_MOUSE) >= 1;
+	obst %= OBSERVATE_MOUSE;
+	bool keys = (obst/OBSERVATE_KEYBOARD) >=1;
+	obst %= OBSERVATE_KEYBOARD;
+	bool wheels = (obst/OBSERVATE_WHEELS) >=1;
+	obst %= OBSERVATE_WHEELS;
+	bool clicks = (obst/OBSERVATE_CLICKS) >=1;
+
+	switch(flag)
+	{
+	case OBSERVATE_MOUSE:
+		return mouse;
+	case OBSERVATE_KEYBOARD:
+		return keys;
+	case OBSERVATE_WHEELS:
+		return wheels;
+	case OBSERVATE_CLICKS:
+		return clicks;
+	}
+
+	return false;
 }
 
 IInteractive::IInteractive()

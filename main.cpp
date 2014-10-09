@@ -3,18 +3,21 @@
 
 #include <vector>
 #include <iostream>
-#include "IrrAudio.h"
+
 #include "projectMacros.h"
 #include "Yeti.h"
 #include "Map.h"
+#include "Connectable.h"
+#include "TestYeti.h"
+#include "TestConectables.h"
 
-#define AUDIO irrAudio::GetInstance()
+
 
 Yeti* yeti;
-Yeti* serengetiYeti;
+TestYeti* serengetiYeti;
 Map* map;
 
-
+//TestYeti* yeti;
 
 void init(void);
 void display(void);
@@ -34,8 +37,9 @@ void WriteText(char* string,int x,int y,int z);
 // - The Assambley's entrypoint
 int main(int argc, char** argv)
 {
-
-
+	AUDIO->LoadeAudio("testtrack.wav");
+	
+//	loadeTrack("testtrack.wav");
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
@@ -59,6 +63,7 @@ int main(int argc, char** argv)
 	
 //	audio->SwitchOff();
 	delete yeti;
+	delete serengetiYeti;
 	delete map;
 	
 //	delete audio;
@@ -87,27 +92,32 @@ void init()
 void LoadingFunction()
 {
 	INPUT->attachMouseWheel(SCENE->camera);
-
+	
+	
+	//Yeti without components...
 	yeti = new Yeti("wendy_Scene.obi","tex_wendy_2.jpg",true);
 	INPUT->attachKey(yeti);
+	INPUT->attachMouseClick(yeti);
 	INPUT->attachMouseMove(yeti);
-	
-	
-	serengetiYeti = new Yeti("wendy_Scene.obi","tex_wendy.jpg",true);
-	SCENE->camera->SetTarget(serengetiYeti);
-	//INPUT->attachKey(serengetiYeti);
-	INPUT->attachMouseMove(serengetiYeti);
+
+	//testyeti uses IConnectable Components...
+	serengetiYeti = new TestYeti("wendy_Scene.obi","tex_wendy.jpg",true);
+	serengetiYeti->conXtor->AddConnectable<YetiInteractive>(&serengetiYeti->ConIDs[0]);
+	serengetiYeti->conXtor->AddConnectable<CameraTargetRotator>(&serengetiYeti->ConIDs[1]);
+	SCENE->camera->SetTarget(yeti);
+	INPUT->attachKey(serengetiYeti->conXtor->GetConnected<YetiInteractive>(serengetiYeti->ConIDs[0]));
+	INPUT->attachMouseMove(serengetiYeti->conXtor->GetConnected<YetiInteractive>(serengetiYeti->ConIDs[0]));	
+
 
 	map = new Map("Landschaft.obi","Landschaft_Diffuse.jpg",true);
 	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
 
-	SCENE->camera->transform.position.z=1;
-
+	SCENE->camera->transform.position.y=1;
 	
-//	audio.OpenAudioFile("testtrack.wav");
-	//audio->LoadAudioFile("testtrack.wav");
-	//
-	//audio->SetVolume(0.8f);
+	
+
+
+
 
 }
 
@@ -115,23 +125,40 @@ int yetiNumber=0;
 // the main Update-Cycle.....
 void UpdateFunction(void)
 { 
+	
+
 	if(INPUT->Mouse.LEFT.CLICK)
 	{
-		
 		if(yetiNumber==0)
 		{
 			SCENE->camera->SetTarget(yeti);
 			yetiNumber=1;
-		//	AUDIO.Loade("hallo");
+			printf("switcht to Yeti");
 		}
 		else
 		{
 			SCENE->camera->SetTarget(serengetiYeti);
 			yetiNumber=0;
+			printf("switcht to SerengetiYeti");
 		}
 	}
+	if(INPUT->Mouse.MIDDLE.CLICK)
+	{
+		if(yetiNumber==0)
+		{
+			SCENE->camera->SetFirstPerson((IGobject*)yeti);
 
-	//if(INPUT->Mouse.RIGHT.CLICK)
+		}
+		else
+		{
+			SCENE->camera->SetFirstPerson((IGobject*)serengetiYeti);
+		}
+
+
+		SCENE->camera->SetFirstPerson((IGobject*)yeti);
+	}
+	UPDATE->DoAllTheUpdates();
+//	if(INPUT->Mouse.RIGHT.CLICK)
 	//	audioControls->setIsPaused(false);
 }
 
