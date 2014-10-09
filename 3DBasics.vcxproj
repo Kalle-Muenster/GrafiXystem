@@ -112,10 +112,6 @@
     <ClInclude Include="Yeti.h" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sinus441.wav" />
-    <Media Include="testtrack.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -38,8 +38,8 @@ void WriteText(char* string,int x,int y,int z);
 int main(int argc, char** argv)
 {
 	AUDIO->LoadeAudio("testtrack.wav");
-	
-//	loadeTrack("testtrack.wav");
+	std::cout<<"AudioTrack loadedt...";
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
@@ -116,8 +116,8 @@ void LoadingFunction()
 	
 	
 
-
-
+	AUDIO->Play();
+	std::cout<<"\nAudio:  PLAYING\n";
 
 }
 

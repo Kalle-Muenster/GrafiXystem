@@ -121,14 +121,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sinus441.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
-    <Media Include="testtrack.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
