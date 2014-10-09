@@ -1,11 +1,6 @@
 #include "Connectable.h"
 
 
-
-
-
-
-
 bool
 IConnectable::Not_hasInitialized(void)
 {
@@ -23,12 +18,6 @@ IConnectable::Not_hasInitialized(void)
 }
 
 
-
-
-
-
-
-
 IConnectable::~IConnectable(void)
 {
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_CONNECTIONS ;i++)
@@ -37,20 +26,12 @@ IConnectable::~IConnectable(void)
 
 
 
+
 IGobject* 
 IConnectable::Connection(void)
 {
 	return this->connection;
 }
-//template<typename T> T*
-//IConnectable::GetConnected(void)
-//{
-//	for(int i = 0; i < MAXIMUM_NUMBER_OF_CONNECTIONS ;i++)
-//		if(Connectables[i] == class:IConnectable)
-//			return (T*)_Connectables[i];
-//}
-
-
 
 IConnectable*
 IConnectable::getConnectables(int index)
@@ -64,27 +45,22 @@ IConnectable::setConnectables(int index,IConnectable* connectable)
 	this->Connectables[index]=connectable;
 	this->ConIDs[index]=connectable->ConnectionID;
 }
-//template<typename T> T*
-//IConnectable::GetConnected(ConID conid)
-//{
-//	return (T*)_Connectables[conid];
-//}
-
-//template<typename T> T*
-//IConnectable::AddConnection(int &id)
-//	{
-//	for(int i=0;i<MAXIMUM_NUMBER_OF_CONNECTIONS;i++)
-//		if(GobIDs[i]==0)
-//		{
-//			Connectables[i] = new T();
-//			id=i;
-//			return (T*)_Connectables[i];
-//		}
-//		return NULL;
-//	}
 
 int
 IConnectable::GetNumberOfConnected(void)
 {
 	return this->NumberOfConnectedObjects;
+}
+
+void 
+IConnectable::SetConnection(IGobject* gobject)
+{
+	connection=gobject;
+	ConnectionID=0;
+}
+
+void
+IConnectable::SetConnection(IConnectable* connectable)
+{
+	ConnectionID = ++connectable->current;
 }

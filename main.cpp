@@ -99,15 +99,19 @@ void LoadingFunction()
 	INPUT->attachKey(yeti);
 	INPUT->attachMouseClick(yeti);
 	INPUT->attachMouseMove(yeti);
+	SCENE->camera->SetTarget(yeti);
 
 	//testyeti uses IConnectable Components...
 	serengetiYeti = new TestYeti("wendy_Scene.obi","tex_wendy.jpg",true);
-	serengetiYeti->conXtor->AddConnectable<YetiInteractive>(&serengetiYeti->ConIDs[0]);
-	serengetiYeti->conXtor->AddConnectable<CameraTargetRotator>(&serengetiYeti->ConIDs[1]);
-	SCENE->camera->SetTarget(yeti);
-	INPUT->attachKey(serengetiYeti->conXtor->GetConnected<YetiInteractive>(serengetiYeti->ConIDs[0]));
-	INPUT->attachMouseMove(serengetiYeti->conXtor->GetConnected<YetiInteractive>(serengetiYeti->ConIDs[0]));	
-
+//	serengetiYeti->conXtor->AddConnectable<YetiInteractive>(&serengetiYeti->ConIDs[0]);
+	serengetiYeti->conXtor->AddConnectable<YetiInteractive>();
+//	serengetiYeti->conXtor->AddConnectable<CameraTargetRotator>(&serengetiYeti->ConIDs[1]);
+	serengetiYeti->conXtor->AddConnectable<CameraTargetRotator>();
+	
+//  INPUT->attachKey(serengetiYeti->conXtor->GetConnected<YetiInteractive>(serengetiYeti->ConIDs[0]));
+	INPUT->attachKey(serengetiYeti->conXtor->GetConnected<YetiInteractive>());
+//	INPUT->attachMouseMove(serengetiYeti->conXtor->GetConnected<YetiInteractive>(serengetiYeti->ConIDs[0]));	
+	INPUT->attachMouseMove(serengetiYeti->conXtor->GetConnected<YetiInteractive>());	
 
 	map = new Map("Landschaft.obi","Landschaft_Diffuse.jpg",true);
 	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));

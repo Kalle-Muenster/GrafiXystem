@@ -15,7 +15,7 @@ YetiInteractive::keyPress(char key)
 	{
 		float X,Y;
 		X=this->Connection()->getTransform()->position.x;
-		Y=this->Connection()->getTransform()->position.y;
+		Y=this->Connection()->getTransform()->position.z;
 		switch (key)
 			{
 			case 'w':
