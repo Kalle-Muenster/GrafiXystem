@@ -5,10 +5,6 @@
 #include "Utility.h"
 
 
-
-
-
-
 class IAudioEmitter
 {
 protected:
@@ -32,12 +28,11 @@ class IAudioListener
 protected:
 	float mutedVolume;
 	bool IsMuted;
-	void SetMyPosition(Transform*);
+	void SetMyPosition(TransformA*);
 public:
-	IAudioListener(Transform*);
 	IAudioListener(void);
 	virtual ~IAudioListener(void);
-	virtual void UpdatePosition(Transform*)=0;
+	virtual void InitiateListener(TransformA*);
 	virtual bool ToggleMute();
 	virtual float AudioVolume(float=2);
 };

@@ -21,4 +21,6 @@
 #define UPDATE UpdateManager::getInstance()
 #define AUDIO BassAudio::GetInstance()
 
+typedef char* string;
+
 #endif

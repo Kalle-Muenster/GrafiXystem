@@ -68,35 +68,42 @@ IAudioEmitter::LoadeAudio(const char* filename)
 
 
 void
-IAudioEmitter::SetMyPosition(Transform* myTransform)
+IAudioEmitter::SetMyPosition(Transform *myTransform)
 {
 //	BASS_ChannelSet3DPosition((DWORD)audioSource,&myTransform->position,&myTransform->rotation,&myTransform->scale);
 	BASS_Apply3D();
 }
 
+
+
+
+
+
+
+
+
+
+
 IAudioListener::IAudioListener(void)
 {
 
-}
-IAudioListener::IAudioListener(Transform* myTransform)
-{
-	this->SetMyPosition(myTransform);
-	BASS_Apply3D();
 }
 IAudioListener::~IAudioListener(void)
 {
 
 }
+void
+IAudioListener::InitiateListener(TransformA* myTransform)
+{
+	this->SetMyPosition(myTransform);
+	BASS_Apply3D();
+}
+
 
 void
-IAudioListener::SetMyPosition(Transform* myTranform)
+IAudioListener::SetMyPosition(TransformA* myTranform)
 {
-	//BASS_3DVECTOR up,right,forward;
- //
-
-	//BASS_Set3DPosition(&myTranform->position,&myTranform->scale,&myTranform->rotation.z,&myTranform->rotation.y)
-		throw "todo...";
-
+	BASS_Set3DPosition(&myTranform->position, &myTranform->movement,&myTranform->forward,&myTranform->up);
 }
 
 

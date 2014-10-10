@@ -2,7 +2,7 @@
 #define _CONNECTABLE_H_
 #include "IGobject.h"
 //class IGobject;
-#define MAXIMUM_NUMBER_OF_CONNECTIONS (100)
+#define MAXIMUM_NUMBER_OF_CONNECTIONS (10)
 
 typedef unsigned int ConID;
 

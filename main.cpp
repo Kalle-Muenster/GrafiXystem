@@ -37,8 +37,8 @@ void WriteText(char* string,int x,int y,int z);
 // - The Assambley's entrypoint
 int main(int argc, char** argv)
 {
-	//AUDIO->LoadeAudio("testtrack.wav");
-	//std::cout<<"AudioTrack loadedt...";
+	AUDIO->LoadeBackgroundAudio("testtrack.wav");
+
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
@@ -103,25 +103,20 @@ void LoadingFunction()
 
 	//testyeti uses IConnectable Components...
 	serengetiYeti = new TestYeti("wendy_Scene.obi","tex_wendy.jpg",true);
-//	serengetiYeti->conXtor->AddConnectable<YetiInteractive>(&serengetiYeti->ConIDs[0]);
 	serengetiYeti->conXtor->AddConnectable<YetiInteractive>();
-//	serengetiYeti->conXtor->AddConnectable<CameraTargetRotator>(&serengetiYeti->ConIDs[1]);
 	serengetiYeti->conXtor->AddConnectable<CameraTargetRotator>();
-	
-//  INPUT->attachKey(serengetiYeti->conXtor->GetConnected<YetiInteractive>(serengetiYeti->ConIDs[0]));
 	INPUT->attachKey(serengetiYeti->conXtor->GetConnected<YetiInteractive>());
-//	INPUT->attachMouseMove(serengetiYeti->conXtor->GetConnected<YetiInteractive>(serengetiYeti->ConIDs[0]));	
 	INPUT->attachMouseMove(serengetiYeti->conXtor->GetConnected<YetiInteractive>());	
 
 	map = new Map("Landschaft.obi","Landschaft_Diffuse.jpg",true);
 	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
 
-	SCENE->camera->transform.position.y=1;
+	SCENE->camera->transform.position.y=2;
 	
 	
 
-	//AUDIO->Play();
-	//std::cout<<"\nAudio:  PLAYING\n";
+	AUDIO->Play();
+	
 
 }
 

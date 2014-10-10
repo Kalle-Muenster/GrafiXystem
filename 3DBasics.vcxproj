@@ -97,7 +97,6 @@
     <ClInclude Include="Cam.h" />
     <ClInclude Include="Connectable.h" />
     <ClInclude Include="IGobject.h" />
-    <ClInclude Include="IrrAudio.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="Observer.h" />

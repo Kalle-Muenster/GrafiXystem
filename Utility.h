@@ -16,10 +16,18 @@ struct Transform
 	glm::vec3 scale;
 	glm::vec3 rotation;
 
-	glm::vec3 *forward,*right,*up;
+	glm::vec3 forward,right,up;
 };
 
+struct TransformA
+{
+	
+	BASS_3DVECTOR position;
+	BASS_3DVECTOR movement;
+	BASS_3DVECTOR rotation;
 
+	BASS_3DVECTOR forward,right,up;
+};
 
 class Utility 
 {

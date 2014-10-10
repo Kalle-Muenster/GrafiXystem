@@ -49,7 +49,7 @@ IGobject::init(const char* objFile, const char* textureFile)
 	this->textureID = Utility::loadTexture(textureFile);
 	glm::vec3 temp1 = glm::vec3(0,0,1);
 
-	transform.forward = new glm::vec3(temp1.x,temp1.y,temp1.z);
+	transform.forward = glm::vec3(temp1.x,temp1.y,temp1.z);
 
 	//this->transform.right =&temp2;
 	//this->transform.up =&temp3;

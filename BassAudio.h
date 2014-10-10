@@ -9,7 +9,7 @@ class BassAudio
 {
 private:
 	BassAudio(void);
-	HSTREAM derAudio;
+
 
 public:
 	
@@ -19,8 +19,8 @@ public:
 	void LoadeBackgroundAudio(const char*);// or musik...
 	void Play(void);
 	void Pause(void);
-	void SetListenerPosition(Transform*);
-
+	void SetListenerPosition(TransformA*);
+	float Volume(float=2);
 };
 
 #endif

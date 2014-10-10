@@ -10,12 +10,12 @@ Cam::Cam(void)
 	this->transform.rotation.x=0;
 	this->transform.rotation.y=0;
 	this->transform.rotation.z=0;
-	this->transform.scale.x=1;
-	this->transform.scale.y=1;
-	this->transform.scale.z=1;
+	this->transform.movement.x=0;
+	this->transform.movement.y=0;
+	this->transform.movement.z=0;
 
-	
-	
+
+	InitiateListener(&this->transform);
 }
 
 
@@ -127,6 +127,30 @@ Cam::WheelVRoll(WHEEL state)
 	transform.position.y+=(float)state/10;
 }
 
+BASS_3DVECTOR
+Cam::move(glm::vec3  newPosition)
+{
+		this->transform.movement.x = newPosition.x - this->transform.position.x;
+		this->transform.movement.y = newPosition.y - this->transform.position.y;
+		this->transform.movement.z = newPosition.z - this->transform.position.z;
+
+		this->transform.position.x = newPosition.x;
+		this->transform.position.y = newPosition.y;
+		this->transform.position.z = newPosition.z;
+
+		return transform.position;
+}
+
+BASS_3DVECTOR
+Cam::rotate(glm::vec3 newRotation)
+{
+		this->transform.rotation.x = newRotation.x;
+		this->transform.rotation.y = newRotation.y;
+		this->transform.rotation.z = newRotation.z;
+
+		return this->transform.rotation;
+}
+
 void
 Cam::Update()
 {
@@ -135,17 +159,18 @@ Cam::Update()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
+		this->rotate(*camTarget);
+
 		gluLookAt(transform.position.x, transform.position.y, transform.position.z, camTarget->x,camTarget->y,camTarget->z, 0, 1, 0);
 	}
 	if(_FollowFirstPerson)
 	{
-		
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		this->transform = _target->transform;
+		this->move(*camTarget);
 
-		gluLookAt(transform.position.x, transform.position.y+1, transform.position.z, transform.rotation.x,transform.rotation.y,transform.rotation.z, 0, 1, 0);
+		gluLookAt(camTarget->x, camTarget->y, camTarget->z, _target->transform.rotation.x,_target->transform.rotation.y,_target->transform.rotation.z, 0, 1, 0);
 	}
 }
 
