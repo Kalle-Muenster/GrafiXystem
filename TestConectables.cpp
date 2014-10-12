@@ -20,9 +20,11 @@ YetiInteractive::keyPress(char key)
 			{
 			case 'w':
 				X+=0.01;
+			//	this->Connection()->move(this->Connection()->transform.forward);
 				break;
 			case 's':
 				X-=0.01;
+			//	this->Connection()->move(-this->Connection()->transform.forward);
 				break;
 			case 'a':
 				Y+=0.01;
@@ -31,7 +33,7 @@ YetiInteractive::keyPress(char key)
 				Y-=0.01;
 				break;
 			}
-		this->Connection()->move(glm::vec3(X,this->Connection()->getTransform()->position.y,Y));
+		this->Connection()->move(Vector3(X,this->Connection()->getTransform()->position.y,Y));
 		printf("Keypress (\"%c\") recieved in Connectable,Interactive,Observer ! \n",key);
 	}
 }

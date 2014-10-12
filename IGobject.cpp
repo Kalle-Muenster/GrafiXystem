@@ -49,7 +49,7 @@ IGobject::init(const char* objFile, const char* textureFile)
 	this->textureID = Utility::loadTexture(textureFile);
 	glm::vec3 temp1 = glm::vec3(0,0,1);
 
-	transform.forward = glm::vec3(temp1.x,temp1.y,temp1.z);
+	transform.forward = Vector3(temp1.x,temp1.y,temp1.z);
 
 	//this->transform.right =&temp2;
 	//this->transform.up =&temp3;
@@ -69,30 +69,32 @@ IGobject::init(const char* objFile, const char* textureFile)
 	IsVisible = true;
 }
 
-Transform*
+TransformA*
 IGobject::getTransform()
 {
 	return &this->transform;
 }
 
 void
-IGobject::move(glm::vec3 to)
+IGobject::move(Vector3 to)
 {
+	this->transform.movement = (to - this->transform.position);
 	this->transform.position = to;
 }
 
 
 
 void
-IGobject::scale(glm::vec3 to)
+IGobject::scale(Vector3 to)
 {
 	this->transform.scale = to;
 }
 
 void
-IGobject::rotate(glm::vec3 to)
+IGobject::rotate(Vector3 to)
 {
 	this->transform.rotation = to;
+	this->transform.forward = glm::normalize((glm::vec3)this->transform.rotation);
 }
 
 void

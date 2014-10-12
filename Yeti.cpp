@@ -38,7 +38,7 @@ Yeti::keyPress(char key)
 		Y-=0.01;
 		break;
 	}
-	this->move(glm::vec3(X,this->getTransform()->position.y,Y));
+	this->move(Vector3(X,this->getTransform()->position.y,Y));
 	std::cout<<"Key Pressed ! : ";
 	printf("%c\n",key);
 	}
@@ -52,11 +52,11 @@ Yeti::mouseMotion(int x,int y)
 		{
 	
 	if(INPUT->Mouse.MIDDLE.HOLD)
-		this->rotate(glm::vec3(this->getTransform()->rotation.x,this->getTransform()->rotation.y,this->getTransform()->rotation.z+INPUT->Mouse.Movement.x));
+		this->rotate(Vector3(this->getTransform()->rotation.x,this->getTransform()->rotation.y,this->getTransform()->rotation.z+INPUT->Mouse.Movement.x));
 	else if(INPUT->Mouse.RIGHT.HOLD)
 		{
-			this->rotate(glm::vec3(this->getTransform()->rotation.x,this->getTransform()->rotation.y+INPUT->Mouse.Movement.x,this->getTransform()->rotation.z));
-			this->rotate(glm::vec3(this->getTransform()->rotation.x,this->getTransform()->rotation.y,this->getTransform()->rotation.z+INPUT->Mouse.Movement.y));
+			this->rotate(Vector3(this->getTransform()->rotation.x,this->getTransform()->rotation.y+INPUT->Mouse.Movement.x,this->getTransform()->rotation.z));
+			this->rotate(Vector3(this->getTransform()->rotation.x,this->getTransform()->rotation.y,this->getTransform()->rotation.z+INPUT->Mouse.Movement.y));
 		}
 		}
 }

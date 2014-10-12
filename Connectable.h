@@ -32,6 +32,7 @@ public:
 	virtual ~IConnectable(void);
 	
 
+
 	//Returns the Connaction's owner...
 	//The "Main"-Object where all other Connectables are connected to
 	//or the "Head" of the Connection...

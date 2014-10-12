@@ -5,15 +5,18 @@
 #include "Utility.h"
 
 
+
 class IAudioEmitter
 {
 protected:
-	HSTREAM audioSource;
+	HCHANNEL audioSource;
+	void InitiateAudioEmitter(TransformA*,const char*);
 	bool IsPlaying;
-	void SetMyPosition(Transform*);
+	void SetMyPosition(TransformA*);
+
 public:
 	IAudioEmitter(void);
-	IAudioEmitter(Transform*);
+//	IAudioEmitter(Transform*);
 	virtual ~IAudioEmitter(void)=0;
 	virtual void LoadeAudio(const char*);
 	virtual void PlayAudio(void);
@@ -22,6 +25,16 @@ public:
 	virtual float PitchAudio(float=2);
 
 };
+
+class AudioEmitter : public IConnectable , public IAudioEmitter
+{
+public:
+	AudioEmitter(void);
+	virtual void LoadeSample(const char*);
+	
+
+};
+
 
 class IAudioListener
 {
@@ -35,5 +48,6 @@ public:
 	virtual void InitiateListener(TransformA*);
 	virtual bool ToggleMute();
 	virtual float AudioVolume(float=2);
+	void DebugOutPosition(void);
 };
 #endif

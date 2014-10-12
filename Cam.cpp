@@ -138,6 +138,11 @@ Cam::move(glm::vec3  newPosition)
 		this->transform.position.y = newPosition.y;
 		this->transform.position.z = newPosition.z;
 
+
+
+		SetMyPosition(&this->transform);
+		DebugOutPosition();
+
 		return transform.position;
 }
 
@@ -147,6 +152,8 @@ Cam::rotate(glm::vec3 newRotation)
 		this->transform.rotation.x = newRotation.x;
 		this->transform.rotation.y = newRotation.y;
 		this->transform.rotation.z = newRotation.z;
+
+		this->transform.forward = glm::normalize((glm::vec3)this->transform.rotation);
 
 		return this->transform.rotation;
 }
@@ -170,7 +177,7 @@ Cam::Update()
 
 		this->move(*camTarget);
 
-		gluLookAt(camTarget->x, camTarget->y, camTarget->z, _target->transform.rotation.x,_target->transform.rotation.y,_target->transform.rotation.z, 0, 1, 0);
+		gluLookAt(camTarget->x, camTarget->y, camTarget->z, _target->transform.rotation.x+=INPUT->Mouse.Movement.x,(_target->transform.rotation.y+=INPUT->Mouse.Movement.y),_target->transform.rotation.z+=INPUT->Mouse.Movement.x, 0, 1, 0);
 	}
 }
 

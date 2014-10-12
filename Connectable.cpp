@@ -63,4 +63,5 @@ void
 IConnectable::SetConnection(IConnectable* connectable)
 {
 	ConnectionID = ++connectable->current;
+	connection = connectable->Connection();
 }

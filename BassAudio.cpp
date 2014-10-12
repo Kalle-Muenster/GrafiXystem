@@ -82,8 +82,26 @@ _getAudioStreamByFileName(const string filename)
 	fileLength=ftell(file);
 	fseek(file,0,SEEK_SET);
 	offset=0;
-	HSTREAM audio = BASS_StreamCreateFile(false, filename,offset,fileLength,BASS_STREAM_AUTOFREE);
-	return audio;
+	return BASS_StreamCreateFile(false, filename,offset,fileLength,BASS_STREAM_AUTOFREE);
+}
+
+HCHANNEL
+BassAudio::Loade3DSample(const char* filename)
+{
+	FILE* file;
+	file = fopen(filename,"rb");
+	long fileLength,offset;
+	fseek(file,0,SEEK_END);
+	fileLength=ftell(file);
+	fseek(file,0,SEEK_SET);
+	offset=0;
+	HSAMPLE sample = BASS_SampleLoad(false,filename,offset,0,5,BASS_SAMPLE_LOOP|BASS_SAMPLE_3D);
+	std::cout<<_GetErrorString();
+	HCHANNEL channel = BASS_SampleGetChannel(sample,true);
+	std::cout<<_GetErrorString();
+	BASS_Apply3D();
+	std::cout<<_GetErrorString();
+	return channel;
 }
 
 BassAudio::BassAudio(void)
@@ -92,6 +110,9 @@ BassAudio::BassAudio(void)
 	BASS_Init(-1,44100,BASS_DEVICE_3D|BASS_DEVICE_FREQ,0,NULL);
 	HPLUGIN BASS_PluginLoad((HPLUGIN)"bass_fx.dll");
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 100);	
+	std::cout<<_GetErrorString();
+	BASS_SetEAXParameters(EAX_PRESET_ARENA);
+	std::cout<<_GetErrorString();
 }
 
 
@@ -112,7 +133,7 @@ BassAudio::GetInstance(void)
 
 
 HSTREAM
-BassAudio::LoadeAudio(const char* fileName)
+BassAudio::LoadeMusic(const char* fileName)
 {
 	return _getAudioStreamByFileName((const string)fileName);
 }
@@ -121,7 +142,8 @@ BassAudio::LoadeAudio(const char* fileName)
 void 
 BassAudio::SetListenerPosition(TransformA* cameraTranform)
 {
-	BASS_Set3DPosition(new BASS_3DVECTOR(cameraTranform->position.x,cameraTranform->position.y,cameraTranform->position.z),&cameraTranform->movement,&cameraTranform->forward,&cameraTranform->up);
+	BASS_Set3DPosition(cameraTranform->position.asBassVector(),&cameraTranform->movement,cameraTranform->forward.asBassVector(),cameraTranform->up.asBassVector());
+	BASS_Apply3D();
 }
 
 void

@@ -104,18 +104,22 @@ void LoadingFunction()
 	//testyeti uses IConnectable Components...
 	serengetiYeti = new TestYeti("wendy_Scene.obi","tex_wendy.jpg",true);
 	serengetiYeti->conXtor->AddConnectable<YetiInteractive>();
-	serengetiYeti->conXtor->AddConnectable<CameraTargetRotator>();
+//	serengetiYeti->conXtor->AddConnectable<CameraTargetRotator>();
+	serengetiYeti->conXtor->AddConnectable<AudioEmitter>();
+	serengetiYeti->conXtor->GetConnected<AudioEmitter>()->LoadeSample("soundMono.wav");
+	
+
 	INPUT->attachKey(serengetiYeti->conXtor->GetConnected<YetiInteractive>());
 	INPUT->attachMouseMove(serengetiYeti->conXtor->GetConnected<YetiInteractive>());	
 
 	map = new Map("Landschaft.obi","Landschaft_Diffuse.jpg",true);
-	map->move(glm::vec3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
+	map->move(Vector3(map->getTransform()->position.x,-0.2,map->getTransform()->position.z));
 
 	SCENE->camera->transform.position.y=2;
 	
 	
 
-	AUDIO->Play();
+//	AUDIO->Play();
 	
 
 }
@@ -139,6 +143,7 @@ void UpdateFunction(void)
 			SCENE->camera->SetTarget(serengetiYeti);
 			yetiNumber=0;
 			printf("switcht to SerengetiYeti");
+			serengetiYeti->conXtor->GetConnected<AudioEmitter>()->PlayAudio();
 		}
 	}
 	if(INPUT->Mouse.MIDDLE.CLICK)

@@ -29,18 +29,18 @@ protected:
 	std::vector<glm::vec3> norms;
 
 public:
-	Transform transform;
-	virtual Transform* getTransform();
+	TransformA transform;
+	virtual TransformA* getTransform();
 	bool IsVisible;
 	IGobject(void);
 	virtual ~IGobject(void);
 	virtual void draw();
 	virtual void init(const char* objFile,const char* textureFile);
 	virtual void init(const char* objFile,const char* textureFile,bool addToSceneGraph);
-	virtual void move(glm::vec3);
+	virtual void move(Vector3);
 
-	virtual void scale(glm::vec3);
-	virtual void rotate(glm::vec3);
+	virtual void scale(Vector3);
+	virtual void rotate(Vector3);
 	GobID GetObjectID(void);
 	IConnectable* conXtor;
 

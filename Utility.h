@@ -8,6 +8,19 @@
 #include <vector>
 #include <iostream>
 
+struct Vector3 : public glm::vec3
+{
+private:
+	BASS_3DVECTOR bassVector;
+public:
+	Vector3(void);
+	Vector3(float,float,float);
+	Vector3(glm::vec3);
+	operator BASS_3DVECTOR();
+	Vector3 operator+(Vector3);
+	Vector3 operator-(Vector3);
+	BASS_3DVECTOR* asBassVector(void);
+};
 
 struct Transform 
 {
@@ -22,11 +35,12 @@ struct Transform
 struct TransformA
 {
 	
-	BASS_3DVECTOR position;
+	Vector3 position;
+	Vector3 scale;
 	BASS_3DVECTOR movement;
-	BASS_3DVECTOR rotation;
+	Vector3 rotation;
 
-	BASS_3DVECTOR forward,right,up;
+	Vector3 forward,right,up;
 };
 
 class Utility 

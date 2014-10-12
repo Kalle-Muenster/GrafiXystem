@@ -15,7 +15,8 @@ public:
 	
 	virtual ~BassAudio(void);
 	static BassAudio* GetInstance(void);
-	HSTREAM LoadeAudio(const char*);
+	HSTREAM LoadeMusic(const char*);
+	HCHANNEL Loade3DSample(const char*);
 	void LoadeBackgroundAudio(const char*);// or musik...
 	void Play(void);
 	void Pause(void);
