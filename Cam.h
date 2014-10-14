@@ -17,12 +17,15 @@ private:
 	float				_distanceToTarget;
 	glm::vec3			*camTarget;
 	ConID				*targetConID;
-	
+	double				_fieldOfView;
+	GLfloat				_aspect;
+	void                UpdateView();
 
 public:
 							Cam(void);
 	virtual					~Cam(void);
-	
+	virtual double			FieldOfView(double = _FNan._Double);
+	virtual GLfloat			Aspect(GLfloat = NULL);
 	TransformA              transform;
 	void					SetTarget(IGobject*);
 	void					SetFirstPerson(IGobject*);
@@ -36,6 +39,7 @@ public:
 	void					WheelVRoll(WHEEL state);
 	BASS_3DVECTOR           move(glm::vec3);
 	BASS_3DVECTOR           rotate(glm::vec3);
+	
 	
 };
 

@@ -7,13 +7,14 @@
 IAudioEmitter::IAudioEmitter(void)
 {
 	IsPlaying=false;
-
+	for (int i=0;i<1024;i++)
+		fftwindow[i]=0;
 }
 
 void
 IAudioEmitter::InitiateAudioEmitter(TransformA* myTransform,const char *audioFileName)
 {
-	LoadeAudio(audioFileName);
+	this->LoadeSample(audioFileName);
 	SetMyPosition(myTransform);
 	BASS_Apply3D();
 }
@@ -63,19 +64,35 @@ IAudioEmitter::PitchAudio(float pitcher)
 	throw "mach ich später...";
 }
 
-void
-IAudioEmitter::LoadeAudio(const char* filename)
+
+
+bool
+IAudioEmitter::IsAudioPlaying(void)
 {
-	audioSource = AUDIO->Loade3DSample(filename);
-
+	if( BASS_ChannelIsActive(audioSource) == BASS_ACTIVE_PLAYING)
+		return true;
+	else 
+		return false;
 }
-
 
 void
 IAudioEmitter::SetMyPosition(TransformA *myTransform)
 {
 	BASS_ChannelSet3DPosition((DWORD)audioSource,myTransform->position.asBassVector(),myTransform->rotation.asBassVector(),&myTransform->movement);
 	BASS_Apply3D();
+}
+
+float*
+IAudioEmitter::GetFFTWindow(void)
+{
+	return this->GetFFTWindow(Small);
+}
+float*
+IAudioEmitter::GetFFTWindow(int size)
+{
+	void* buffer = &fftwindow[0];
+	AUDIO->GetChannelFFT(this->audioSource,buffer,(FFT_SIZE)size);
+	return &fftwindow[0];
 }
 
 
@@ -86,6 +103,15 @@ AudioEmitter::AudioEmitter(void)
 
 
 void
+IAudioEmitter::LoadeSample(const char* audioFileName)
+{
+	
+	audioSource = AUDIO->Loade3DSample(audioFileName);
+//	SetMyPosition(&this->Connection()->transform);
+	this->AudioVolume(0.8);
+
+}
+void
 AudioEmitter::LoadeSample(const char* audioFileName)
 {
 	
@@ -95,9 +121,24 @@ AudioEmitter::LoadeSample(const char* audioFileName)
 
 }
 
+void
+IAudioEmitter::LoadeStream(const char* audioFileName)
+{
+	
+	audioSource = AUDIO->LoadeMusic(audioFileName,LOAD_3D);
+//	SetMyPosition(&this->Connection()->transform);
+	this->AudioVolume(0.8);
 
+}
+void
+AudioEmitter::LoadeStream(const char* audioFileName)
+{
+	
+	audioSource = AUDIO->LoadeMusic(audioFileName,LOAD_3D);
+	SetMyPosition(&this->Connection()->transform);
+	this->AudioVolume(0.8);
 
-
+}
 
 IAudioListener::IAudioListener(void)
 {
@@ -118,8 +159,8 @@ IAudioListener::InitiateListener(TransformA* myTransform)
 void
 IAudioListener::SetMyPosition(TransformA* myTranform)
 {
-	BASS_Set3DPosition(myTranform->position.asBassVector(), &myTranform->movement,myTranform->forward.asBassVector(),myTranform->up.asBassVector());
-//	BASS_Set3DPosition(&(BASS_3DVECTOR)myTranform->position, &myTranform->movement,&(BASS_3DVECTOR)myTranform->forward,&(BASS_3DVECTOR)myTranform->up);
+//	BASS_Set3DPosition(myTranform->position.asBassVector(), &myTranform->movement,myTranform->forward.asBassVector(),myTranform->up.asBassVector());
+	BASS_Set3DPosition(&(BASS_3DVECTOR)myTranform->position, &myTranform->movement,&(BASS_3DVECTOR)myTranform->forward,&(BASS_3DVECTOR)myTranform->up);
 	BASS_Apply3D();
 }
 
@@ -159,5 +200,12 @@ IAudioListener::DebugOutPosition(void)
 	BASS_3DVECTOR temp4 = BASS_3DVECTOR(0,0,0);
 	BASS_Get3DPosition(&temp1,&temp2,&temp3,&temp4);
 	BASS_Apply3D();
-	printf("\nposition: %f,%f,%f",temp1.x,temp1.y,temp1.z);
+//	printf("\nposition: %f,%f,%f",temp1.x,temp1.y,temp1.z);
+}
+
+void* 
+IAudioListener::GetMasterOutFFT(void)
+{
+	if(!AUDIO->MasterResampling())
+		return AUDIO->GetMasterOutFFT();
 }

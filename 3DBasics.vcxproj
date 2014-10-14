@@ -79,6 +79,7 @@
     <ClCompile Include="Cam.cpp" />
     <ClCompile Include="Connectable.cpp" />
     <ClCompile Include="IGobject.cpp" />
+    <ClCompile Include="IMusicListener.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -97,9 +98,11 @@
     <ClInclude Include="Cam.h" />
     <ClInclude Include="Connectable.h" />
     <ClInclude Include="IGobject.h" />
+    <ClInclude Include="IMusicListener.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="projectClasses.h" />
     <ClInclude Include="projectGrafics.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="projectMacros.h" />

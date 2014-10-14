@@ -13,6 +13,8 @@
 
 #include <vector>
 #include "projectGrafics.h"
+//#include "projectMacros.h"
+#include "Utility.h"
 
 enum WHEEL{DOWN=-1,NONE=0,UP=1};
 
@@ -113,6 +115,8 @@ public:
 	int X,Y;
 }   Mouse; 
 
+	glm::vec4 GetViewportRectangle(void);
+
     /*attachement functions by wich "IObserver"-objects
     can register on Notification-Events */
 	virtual void attachMouseMove(IObserver* obs);
@@ -128,7 +132,7 @@ public:
 	virtual void notifyMouse(int x, int y);
 	void UpdateMouseButtons(int,int,int,int);
 	void UpdateMouseWheel(int,int,int,int);
-
+	void SaveViewportRectangle(int x,int y,int w,int h);
 
 	//frameReset: must be called before all other
 	//i.E. as firs function in the UpdateFunction

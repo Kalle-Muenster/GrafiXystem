@@ -29,6 +29,7 @@ public:
 		NumberOfConnectedObjects=0;
 		current= -1;
 	}
+
 	virtual ~IConnectable(void);
 	
 
@@ -68,8 +69,7 @@ public:
 		if(ConIDs[i]==0)
 		{
 			IConnectable* newcon = new T();
-			newcon->SetConnection(this->connection);
-			
+			newcon->SetConnection(this->connection);	
 			newcon->ConnectionID=typeid(T).hash_code(); 
 			setConnectables(i,(T*)newcon);
 			return (T*)getConnectables(i);
@@ -133,6 +133,7 @@ public:
 			this->ConIDs[i]=inst->Connection()->conXtor->ConIDs[i];
 			return &this->ConIDs[i];
 		}
+			return NULL;
 	}
 
 

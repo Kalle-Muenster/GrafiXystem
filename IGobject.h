@@ -38,9 +38,10 @@ public:
 	virtual void init(const char* objFile,const char* textureFile);
 	virtual void init(const char* objFile,const char* textureFile,bool addToSceneGraph);
 	virtual void move(Vector3);
-
+	virtual void move(float,float,float);
 	virtual void scale(Vector3);
 	virtual void rotate(Vector3);
+	virtual void rotate(float,float,float);
 	GobID GetObjectID(void);
 	IConnectable* conXtor;
 

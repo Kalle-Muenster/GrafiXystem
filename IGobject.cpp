@@ -81,7 +81,17 @@ IGobject::move(Vector3 to)
 	this->transform.movement = (to - this->transform.position);
 	this->transform.position = to;
 }
+void
+IGobject::move(float tox,float toy,float toz)
+{
+	this->transform.movement.x = (tox - this->transform.position.x);
+	this->transform.movement.y = (toy - this->transform.position.y);
+	this->transform.movement.z = (toz - this->transform.position.z);
 
+	this->transform.position.x = tox;
+	this->transform.position.y = toy;
+	this->transform.position.z = toz;
+}
 
 
 void
@@ -94,6 +104,14 @@ void
 IGobject::rotate(Vector3 to)
 {
 	this->transform.rotation = to;
+	this->transform.forward = glm::normalize((glm::vec3)this->transform.rotation);
+}
+void
+IGobject::rotate(float toiX,float toYps,float toZed)
+{
+	this->transform.rotation.x = toiX;
+	this->transform.rotation.y = toYps;
+	this->transform.rotation.z = toZed;
 	this->transform.forward = glm::normalize((glm::vec3)this->transform.rotation);
 }
 

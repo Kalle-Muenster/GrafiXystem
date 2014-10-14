@@ -16,6 +16,12 @@ Cam::Cam(void)
 
 
 	InitiateListener(&this->transform);
+
+	_fieldOfView = 55;
+	_aspect = 16.0/9.0;
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(transform.position.x, transform.position.y, transform.position.z, transform.rotation.x,transform.rotation.y,transform.rotation.z, 0, 1, 0);
 }
 
 
@@ -124,7 +130,8 @@ Cam::GetTargetPosition()
 void 
 Cam::WheelVRoll(WHEEL state)
 {
-	transform.position.y+=(float)state/10;
+	transform.position.y-=(float)state/10;
+	FieldOfView(FieldOfView() - state); 
 }
 
 BASS_3DVECTOR
@@ -141,7 +148,7 @@ Cam::move(glm::vec3  newPosition)
 
 
 		SetMyPosition(&this->transform);
-		DebugOutPosition();
+	//	DebugOutPosition();
 
 		return transform.position;
 }
@@ -154,30 +161,68 @@ Cam::rotate(glm::vec3 newRotation)
 		this->transform.rotation.z = newRotation.z;
 
 		this->transform.forward = glm::normalize((glm::vec3)this->transform.rotation);
-
+		
 		return this->transform.rotation;
+}
+
+double
+Cam::FieldOfView(double setter)
+{
+	if(setter!=_FNan._Double)
+	{
+		_fieldOfView = setter;
+		UpdateView();
+	}
+	return _fieldOfView;
+}
+
+GLfloat
+Cam::Aspect(GLfloat aspect)
+{
+	if(aspect)
+	{
+		_aspect = aspect;
+		UpdateView();
+	}
+	return _aspect;
+}
+
+
+void
+Cam::UpdateView(void)
+{
+
+	glViewport(0, 0, INPUT->GetViewportRectangle().w,INPUT->GetViewportRectangle().z);
+	
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluPerspective(FieldOfView(), Aspect(), 0.1f, 100.0f);
 }
 
 void
 Cam::Update()
 {
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
 	if(_isFollowingTarget)
 	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
+		this->move(transform.position);
 		this->rotate(*camTarget);
-
-		gluLookAt(transform.position.x, transform.position.y, transform.position.z, camTarget->x,camTarget->y,camTarget->z, 0, 1, 0);
 	}
 	if(_FollowFirstPerson)
 	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
 		this->move(*camTarget);
-
-		gluLookAt(camTarget->x, camTarget->y, camTarget->z, _target->transform.rotation.x+=INPUT->Mouse.Movement.x,(_target->transform.rotation.y+=INPUT->Mouse.Movement.y),_target->transform.rotation.z+=INPUT->Mouse.Movement.x, 0, 1, 0);
+		this->rotate(_target->transform.rotation);
 	}
+
+	if(INPUT->Mouse.MIDDLE.HOLD)
+		this->move(transform.position + Vector3(INPUT->Mouse.Movement.x/100,0,INPUT->Mouse.Movement.y/100));
+
+	SetMyPosition(&transform);
+
+	gluLookAt(transform.position.x, transform.position.y, transform.position.z, transform.rotation.x,transform.rotation.y,transform.rotation.z, 0, 1, 0);
 }
 

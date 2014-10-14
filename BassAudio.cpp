@@ -65,15 +65,99 @@ char* _GetErrorString()
 return "";
 }
 
+char* _GetInputDeviceTypeString(DWORD result)
+{
+	switch (result)
+	{																																						  ; 
+case BASS_INPUT_TYPE_DIGITAL: return "Digital input source, for example, a DAT or audio CD."  																	  ;
+case BASS_INPUT_TYPE_LINE	: return	"Line-in. On some devices, \"Line-in\" may be combined with other analog sources into a single BASS_INPUT_TYPE_ANALOG input. " 			  ;
+case BASS_INPUT_TYPE_MIC	: return	" Microphone.  "																														  ;
+case BASS_INPUT_TYPE_SYNTH	: return		"Internal MIDI synthesizer. " 																										  ;
+case BASS_INPUT_TYPE_CD		: return	"Analog audio CD."  																														  ; 
+case BASS_INPUT_TYPE_PHONE	: return	"Telephone."  																														  ; 
+case BASS_INPUT_TYPE_SPEAKER: return	" PC speaker."  																														  ; 
+case BASS_INPUT_TYPE_WAVE	: return	"The device's WAVE/PCM output.  "																										  ;
+case BASS_INPUT_TYPE_AUX	: return	"Auxiliary. Like \"Line-in\", \"Aux\" may be combined with other analog sources into a single BASS_INPUT_TYPE_ANALOG input on some devices."  ; 
+case BASS_INPUT_TYPE_ANALOG	: return		"Analog, typically a mix of all analog sources."  																					  ; 
+case BASS_INPUT_TYPE_UNDEF	: return	"? Undefined Input Device..." 										; 
+default :
+	return _GetErrorString(); 
+}
+}
+
+int _GetNumberOfInputDevices(void)
+{
+	BASS_RECORDINFO *info = new BASS_RECORDINFO();
+	if(!BASS_RecordGetInfo(info))
+	{
+		std::cout<<"\nAUDIO: Error-> ";
+		std::cout<<_GetErrorString();
+		return -1;
+	}
+	else
+		return info->inputs;
+}
+
+void _printInputDevices(void)
+{
+	int Inputs = _GetNumberOfInputDevices();
+	for (--Inputs;Inputs > -1;Inputs--)
+		printf("\nAUDIO: InputDevice %i: %s",Inputs,_GetInputDeviceTypeString(BASS_RecordGetInput(Inputs,NULL)));
+}
 
 BassAudio* bassaudioInstance;
 HSTREAM derAudio;
+HRECORD MasterOutResample;
 bool _IsPlaying = false;
+bool _IsRecordingMaster = false;
 bool _backgroundAudioLoadet = false;
+bool _recordingInitiated = false;
+
+int _getMasterOutForRecord(void)
+{
+	_printInputDevices();
+	DWORD flags;
+	for (int i=0; (flags=BASS_RecordGetInput(i, NULL))!=-1; i++) 
+	{
+		if ((flags&BASS_INPUT_TYPE_MASK)==BASS_INPUT_TYPE_WAVE) 	
+		{ // found the waveout!
+			return i;
+		}
+	}
+	printf("\nAUDIO: Try open InputDevice:0 for Recording...");
+	return 0;
+}
+
+bool _ToggleRecordFromMasterOut(void)
+{
+	if(!_recordingInitiated)
+	{
+		BASS_RecordInit(-1);
+		printf("\nAUDIO: %s",_GetErrorString());
+		BASS_RecordSetInput(_getMasterOutForRecord(), BASS_INPUT_ON, 1);
+		printf("\nAUDIO: %s",_GetErrorString());
+		MasterOutResample = BASS_RecordStart(44100,2,BASS_RECORD_PAUSE,NULL,NULL);
+		printf("\nAUDIO: %s",_GetErrorString());
+		_recordingInitiated=true;
+	}
+
+	if(_IsRecordingMaster)
+	{
+			BASS_ChannelPause(MasterOutResample);
+			_IsRecordingMaster=false;
+	}
+	else
+	{
+		BASS_ChannelPlay(MasterOutResample,false);
+		_IsRecordingMaster=true;
+	}
+	return _IsRecordingMaster;
+}
+
 
 
 HSTREAM
-_getAudioStreamByFileName(const string filename)
+	_getAudioStreamByFileName(const string filename,int mode)
 {
 	FILE* file;
 	file = fopen(filename,"rb");
@@ -82,7 +166,22 @@ _getAudioStreamByFileName(const string filename)
 	fileLength=ftell(file);
 	fseek(file,0,SEEK_SET);
 	offset=0;
-	return BASS_StreamCreateFile(false, filename,offset,fileLength,BASS_STREAM_AUTOFREE);
+	fclose(file);
+//	delete file;
+	if(mode==LOAD_3D)
+	{
+		return BASS_StreamCreateFile(false, filename,offset,fileLength,BASS_STREAM_AUTOFREE|BASS_SAMPLE_LOOP|BASS_SAMPLE_MONO|BASS_SAMPLE_3D);
+		BASS_Apply3D();
+	}
+	else if(mode==LOAD_2D)
+		return BASS_StreamCreateFile(false, filename,offset,fileLength,BASS_STREAM_AUTOFREE|BASS_SAMPLE_LOOP);
+}
+
+DWORD
+_getChannelData(DWORD channel,int mode,int size,void* buffer)
+{
+	DWORD flags = mode==FFT? size==256? BASS_DATA_FFT256:size==512?BASS_DATA_FFT512:size==1024?BASS_DATA_FFT1024:size: mode==BYTES?size:BASS_DATA_FLOAT;
+	return BASS_ChannelGetData(channel,buffer,flags);
 }
 
 HCHANNEL
@@ -102,6 +201,42 @@ BassAudio::Loade3DSample(const char* filename)
 	BASS_Apply3D();
 	std::cout<<_GetErrorString();
 	return channel;
+}
+
+
+
+void*
+BassAudio::GetChannelBuffer(DWORD channel,int sizeInByte)
+{
+	void* buffer;
+	_getChannelData(channel,(int)BYTES,sizeInByte,buffer);
+	return buffer;
+}
+
+unsigned
+BassAudio::GetChannelFFT(DWORD channel,void* buffer)
+{
+	return _getChannelData(channel,(int)FFT,(int)Small,buffer);
+}
+
+unsigned
+BassAudio::GetChannelFFT(DWORD channel,void* buffer,FFT_SIZE size)
+{
+	return _getChannelData(channel,(int)FFT,(int)size,buffer);
+}
+
+void*
+BassAudio::GetBackgroundAudioFFT(FFT_SIZE size)
+{
+	void* buffer;
+	GetChannelFFT(derAudio,buffer,size);
+	return buffer;
+}
+
+void*
+BassAudio::GetBackgroundAudioFFT(void)
+{
+	return GetBackgroundAudioFFT(Small);
 }
 
 BassAudio::BassAudio(void)
@@ -130,12 +265,26 @@ BassAudio::GetInstance(void)
 		bassaudioInstance;
 }
 
+bool
+BassAudio::MasterResampling(BOOL Switch)
+{
+	if((Switch<3)&&(Switch!=_IsRecordingMaster))
+		_IsRecordingMaster = _ToggleRecordFromMasterOut();
 
+	return _IsRecordingMaster;
+}
+
+bool
+BassAudio::ToggleMasterResampling(void)
+{
+	 _IsRecordingMaster =  _ToggleRecordFromMasterOut();
+	 return _IsRecordingMaster;
+}
 
 HSTREAM
-BassAudio::LoadeMusic(const char* fileName)
+BassAudio::LoadeMusic(const char* fileName,LOAD_MODE mode)
 {
-	return _getAudioStreamByFileName((const string)fileName);
+	return _getAudioStreamByFileName((const string)fileName,(int)mode);
 }
 	
 
@@ -143,13 +292,14 @@ void
 BassAudio::SetListenerPosition(TransformA* cameraTranform)
 {
 	BASS_Set3DPosition(cameraTranform->position.asBassVector(),&cameraTranform->movement,cameraTranform->forward.asBassVector(),cameraTranform->up.asBassVector());
+	printf("\nAUDIO: %s",_GetErrorString());
 	BASS_Apply3D();
 }
 
 void
 BassAudio::LoadeBackgroundAudio(const char* fileName)
 {
-	derAudio = _getAudioStreamByFileName((string)fileName);
+	derAudio = _getAudioStreamByFileName((string)fileName,LOAD_2D);
 	BASS_ChannelSetDevice(derAudio,-1);
 	printf("\nAudio: %s loadet as Backgroundmusic !\n",fileName);
 	_backgroundAudioLoadet = true;
@@ -189,3 +339,15 @@ BassAudio::Volume(float vol)
 	
 	return BASS_GetVolume();
 }
+
+void*
+BassAudio::GetMasterOutFFT(void)
+{
+	void* buffer;
+	if(_IsRecordingMaster)
+		GetChannelFFT(MasterOutResample,buffer,Small);
+	printf("\nAUDIO: %s",_GetErrorString());
+	return buffer;
+}
+
+

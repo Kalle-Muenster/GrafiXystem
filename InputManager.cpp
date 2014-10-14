@@ -2,6 +2,9 @@
 
 InputManager* instance;
 
+glm::vec4 Viewport;
+Vector3 ViewPortNormalizedMouseCoordinates;
+
 InputManager* InputManager::getInstance() 
 {
 	if(!instance) 
@@ -25,6 +28,10 @@ InputManager::InputManager(void)
 	LEFTnewState=MIDDLEnewState=RIGHTnewState=false;
 	Mouse.LEFT.CLICK=Mouse.RIGHT.CLICK=Mouse.MIDDLE.CLICK=false;
 	Mouse.LEFT.HOLD=Mouse.RIGHT.HOLD=Mouse.MIDDLE.HOLD=false;
+	Mouse.Movement = glm::vec2(0,0);
+
+	Viewport=glm::vec4(0,0,1,1);
+	ViewPortNormalizedMouseCoordinates=Vector3(0,0,0);
 }
 
 InputManager::~InputManager(void)
@@ -224,6 +231,21 @@ InputManager::UpdateMouseWheel(int wheel,int state,int x,int y)
 #endif
 }
 
+glm::vec4 
+InputManager::GetViewportRectangle(void)
+{
+	return Viewport;
+}
+
+void 
+InputManager::SaveViewportRectangle(int x,int y,int w,int h)
+{
+	Viewport.x=x;
+	Viewport.y=y;
+	Viewport.w=w;
+	Viewport.z=h;
+}
+
 void
 InputManager::_setMousePosition(int x,int y)
 {
@@ -231,6 +253,20 @@ InputManager::_setMousePosition(int x,int y)
 	Mouse.Movement.y = y-Mouse.Position.y;
 	Mouse.Position.x = Mouse.X = x;
 	Mouse.Position.y = Mouse.Y = y;
+
+	ViewPortNormalizedMouseCoordinates.x = 2*(Mouse.Position.x/GetViewportRectangle().w)-1;
+	ViewPortNormalizedMouseCoordinates.y = 2*(1-Mouse.Position.y/GetViewportRectangle().z)-1;
+
+	glm::vec4 ray_clip(ViewPortNormalizedMouseCoordinates.x,ViewPortNormalizedMouseCoordinates.y,-1,1);
+
+/*
+	
+	glm::vec4 ray_eye = inverse (projection_matrix) * ray_clip;
+	ray_eye = vec4 (ray_eye.xy, -1.0, 0.0);
+	vec3 ray_wor = (inverse (view_matrix) * ray_eye).xyz;
+// don't forget to normalise the vector at some point
+	ray_wor = normalise (ray_wor);
+	*/
 }
 
 void
